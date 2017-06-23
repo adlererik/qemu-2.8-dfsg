@@ -29,3 +29,4 @@ vmw_pvscsi-check-message-ring-page-count-at-init-CVE-2017-8112.patch
 scsi-avoid-an-off-by-one-error-in-megasas_mmio_write-CVE-2017-8380.patch
 input-limit-kbd-queue-depth-CVE-2017-8379.patch
 audio-release-capture-buffers-CVE-2017-8309.patch
+display-virtio-gpu-3d-check-virgl-capabilities-max_size-CVE-2016-10028.patch
