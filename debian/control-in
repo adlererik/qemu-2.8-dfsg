@@ -42,8 +42,11 @@ Build-Depends: debhelper (>= 9),
 # --enable-gnutls
  gnutls-dev,
 # gtk display (see also sdl display)
-# --enable-gtk --with-gtkabi=3.0 --enable-vte
- libgtk-3-dev, libvte-2.91-dev,
+# --enable-gtk
+# --with-gtkabi=3.0
+ libgtk-3-dev,
+# --enable-vte
+ libvte-2.91-dev,
 # opengl for sdl2 and gtk3
 # --enable-opengl
 # libegl1-mesa-dev is here b/c libepoxy-dev includes header from it
