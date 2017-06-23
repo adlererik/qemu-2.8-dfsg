@@ -120,7 +120,8 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# system and utils build
-	$(MAKE) -C qemu-build V=${V}
+	# XXhack alert: opengl libs includes libdrm which is not needed
+	$(MAKE) -C qemu-build V=${V} OPENGL_LIBS="-lepoxy -lgbm -lX11"
 ifeq (${enable_system},enable)
 	dtc -o qemu-build/pc-bios/bamboo.dtb pc-bios/bamboo.dts
 endif
