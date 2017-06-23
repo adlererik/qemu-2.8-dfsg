@@ -1,0 +1,92 @@
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Date: Sun, 26 Mar 2017 20:28:11 +0200
+Subject: slirp: Make RA build more flexible
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Commit-Id: e42f869b5118fa9ac64dcea624276204567fc581
+Bug-Debian: http://bugs.debian.org/844566
+
+Do not hardcode the RA size at all, use a pl_size variable which
+accounts the accumulated size, and fill rip->ip_pl at the end.
+
+This will allow to make some blocks optional.
+
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+---
+ slirp/ip6_icmp.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
+
+diff --git a/slirp/ip6_icmp.c b/slirp/ip6_icmp.c
+index 298a48d..d0f5cc1 100644
+--- a/slirp/ip6_icmp.c
++++ b/slirp/ip6_icmp.c
+@@ -143,17 +143,10 @@ void ndp_send_ra(Slirp *slirp)
+     /* Build IPv6 packet */
+     struct mbuf *t = m_get(slirp);
+     struct ip6 *rip = mtod(t, struct ip6 *);
++    size_t pl_size = 0;
+     rip->ip_src = (struct in6_addr)LINKLOCAL_ADDR;
+     rip->ip_dst = (struct in6_addr)ALLNODES_MULTICAST;
+     rip->ip_nh = IPPROTO_ICMPV6;
+-    rip->ip_pl = htons(ICMP6_NDP_RA_MINLEN
+-                        + NDPOPT_LINKLAYER_LEN
+-                        + NDPOPT_PREFIXINFO_LEN
+-#ifndef _WIN32
+-                        + NDPOPT_RDNSS_LEN
+-#endif
+-                        );
+-    t->m_len = sizeof(struct ip6) + ntohs(rip->ip_pl);
+ 
+     /* Build ICMPv6 packet */
+     t->m_data += sizeof(struct ip6);
+@@ -171,6 +164,7 @@ void ndp_send_ra(Slirp *slirp)
+     ricmp->icmp6_nra.reach_time = htonl(NDP_AdvReachableTime);
+     ricmp->icmp6_nra.retrans_time = htonl(NDP_AdvRetransTime);
+     t->m_data += ICMP6_NDP_RA_MINLEN;
++    pl_size += ICMP6_NDP_RA_MINLEN;
+ 
+     /* Source link-layer address (NDP option) */
+     struct ndpopt *opt = mtod(t, struct ndpopt *);
+@@ -178,6 +172,7 @@ void ndp_send_ra(Slirp *slirp)
+     opt->ndpopt_len = NDPOPT_LINKLAYER_LEN / 8;
+     in6_compute_ethaddr(rip->ip_src, opt->ndpopt_linklayer);
+     t->m_data += NDPOPT_LINKLAYER_LEN;
++    pl_size += NDPOPT_LINKLAYER_LEN;
+ 
+     /* Prefix information (NDP option) */
+     struct ndpopt *opt2 = mtod(t, struct ndpopt *);
+@@ -192,6 +187,7 @@ void ndp_send_ra(Slirp *slirp)
+     opt2->ndpopt_prefixinfo.reserved2 = 0;
+     opt2->ndpopt_prefixinfo.prefix = slirp->vprefix_addr6;
+     t->m_data += NDPOPT_PREFIXINFO_LEN;
++    pl_size += NDPOPT_PREFIXINFO_LEN;
+ 
+ #ifndef _WIN32
+     /* Prefix information (NDP option) */
+@@ -203,16 +199,14 @@ void ndp_send_ra(Slirp *slirp)
+     opt3->ndpopt_rdnss.lifetime = htonl(2 * NDP_MaxRtrAdvInterval);
+     opt3->ndpopt_rdnss.addr = slirp->vnameserver_addr6;
+     t->m_data += NDPOPT_RDNSS_LEN;
++    pl_size += NDPOPT_RDNSS_LEN;
+ #endif
+ 
++    rip->ip_pl = htons(pl_size);
++    t->m_data -= sizeof(struct ip6) + pl_size;
++    t->m_len = sizeof(struct ip6) + pl_size;
++
+     /* ICMPv6 Checksum */
+-#ifndef _WIN32
+-    t->m_data -= NDPOPT_RDNSS_LEN;
+-#endif
+-    t->m_data -= NDPOPT_PREFIXINFO_LEN;
+-    t->m_data -= NDPOPT_LINKLAYER_LEN;
+-    t->m_data -= ICMP6_NDP_RA_MINLEN;
+-    t->m_data -= sizeof(struct ip6);
+     ricmp->icmp6_cksum = ip6_cksum(t);
+ 
+     ip6_output(NULL, t, 0);
+-- 
+2.1.4
+

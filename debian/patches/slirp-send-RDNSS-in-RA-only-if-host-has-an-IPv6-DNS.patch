@@ -1,0 +1,69 @@
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Date: Sun, 26 Mar 2017 20:46:34 +0200
+Subject: slirp: Send RDNSS in RA only if host has an IPv6 DNS server
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Commit-Id: a2f80fdfc683019901cdf4c0863a5920c0ca7245
+Bug-Debian: http://bugs.debian.org/844566
+
+Previously we would always send an RDNSS option in the RA, making the guest
+try to resolve DNS through IPv6, even if the host does not actually have
+and IPv6 DNS server available.
+
+This makes the RDNSS option enabled only when an IPv6 DNS server is
+available.
+
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+---
+ slirp/ip6_icmp.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/slirp/ip6_icmp.c b/slirp/ip6_icmp.c
+index d0f5cc1..777eb57 100644
+--- a/slirp/ip6_icmp.c
++++ b/slirp/ip6_icmp.c
+@@ -144,6 +144,9 @@ void ndp_send_ra(Slirp *slirp)
+     struct mbuf *t = m_get(slirp);
+     struct ip6 *rip = mtod(t, struct ip6 *);
+     size_t pl_size = 0;
++    struct in6_addr addr;
++    uint32_t scope_id;
++
+     rip->ip_src = (struct in6_addr)LINKLOCAL_ADDR;
+     rip->ip_dst = (struct in6_addr)ALLNODES_MULTICAST;
+     rip->ip_nh = IPPROTO_ICMPV6;
+@@ -189,18 +192,18 @@ void ndp_send_ra(Slirp *slirp)
+     t->m_data += NDPOPT_PREFIXINFO_LEN;
+     pl_size += NDPOPT_PREFIXINFO_LEN;
+ 
+-#ifndef _WIN32
+     /* Prefix information (NDP option) */
+-    /* disabled for windows for now, until get_dns6_addr is implemented */
+-    struct ndpopt *opt3 = mtod(t, struct ndpopt *);
+-    opt3->ndpopt_type = NDPOPT_RDNSS;
+-    opt3->ndpopt_len = NDPOPT_RDNSS_LEN / 8;
+-    opt3->ndpopt_rdnss.reserved = 0;
+-    opt3->ndpopt_rdnss.lifetime = htonl(2 * NDP_MaxRtrAdvInterval);
+-    opt3->ndpopt_rdnss.addr = slirp->vnameserver_addr6;
+-    t->m_data += NDPOPT_RDNSS_LEN;
+-    pl_size += NDPOPT_RDNSS_LEN;
+-#endif
++    if (get_dns6_addr(&addr, &scope_id) >= 0) {
++        /* Host system does have an IPv6 DNS server, announce our proxy.  */
++        struct ndpopt *opt3 = mtod(t, struct ndpopt *);
++        opt3->ndpopt_type = NDPOPT_RDNSS;
++        opt3->ndpopt_len = NDPOPT_RDNSS_LEN / 8;
++        opt3->ndpopt_rdnss.reserved = 0;
++        opt3->ndpopt_rdnss.lifetime = htonl(2 * NDP_MaxRtrAdvInterval);
++        opt3->ndpopt_rdnss.addr = slirp->vnameserver_addr6;
++        t->m_data += NDPOPT_RDNSS_LEN;
++        pl_size += NDPOPT_RDNSS_LEN;
++    }
+ 
+     rip->ip_pl = htons(pl_size);
+     t->m_data -= sizeof(struct ip6) + pl_size;
+-- 
+2.1.4
+

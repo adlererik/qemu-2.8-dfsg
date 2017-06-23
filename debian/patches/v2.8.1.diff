@@ -1,0 +1,5370 @@
+Subject: upstream changes between 2.8.0 and 2.8.1, stable/bugfix release
+From: Michael Roth <mdroth@linux.vnet.ibm.com>
+Message-Id: <149097143799.4159.11923553673991145567@loki>
+Date: Fri, 31 Mar 2017 09:43:57 -0500
+
+Not included:
+12110bf: seabios: update to 1.10.2 release (Gerd Hoffmann)
+
+CHANGELOG:
+
+7124ccf: Update version for 2.8.1 release (Michael Roth)
+08c48c7: spapr: fix off-by-one error in spapr_ovec_populate_dt() (Sam Bobroff)
+07672ab: qom: Fix regression with 'qom-type' (Eric Blake)
+877e2b0: target/s390x: Fix broken user mode (Stefan Weil)
+2f8ab9b: qapi: Fix QemuOpts visitor regression on unvisited input (Eric Blake)
+c15c6d2: qom: Avoid unvisited 'id'/'qom-type' in user_creatable_add_opts (Eric Blake)
+dd39c54: monitor: reuse user_creatable_add_opts() instead of user_creatable_add() (Igor Mammedov)
+879b645: tests: Expose regression in QemuOpts visitor (Eric Blake)
+ce37df9: virtio: always use handle_aio_output if registered (Paolo Bonzini)
+dc35a13: cirrus: fix off-by-one in cirrus_bitblt_rop_bkwd_transp_*_16 (Gerd Hoffmann)
+a290442: cirrus: stop passing around src pointers in the blitter (Gerd Hoffmann)
+031700e: cirrus: stop passing around dst pointers in the blitter (Gerd Hoffmann)
+2f51fd1: cirrus: fix cirrus_invalidate_region (Gerd Hoffmann)
+63fdb09: cirrus/vnc: zap bitblit support from console code. (Gerd Hoffmann)
+3328c14: fix :cirrus_vga fix OOB read case qemu Segmentation fault (hangaohuai)
+a99fd94: Revert "cirrus: allow zero source pitch in pattern fill rops" (Gerd Hoffmann)
+670ddcc: cirrus: fix patterncopy checks (Gerd Hoffmann)
+8db3804: cirrus: fix blit address mask handling (Gerd Hoffmann)
+205a619: cirrus: allow zero source pitch in pattern fill rops (Wolfgang Bumiller)
+5d26f91: cirrus: handle negative pitch in cirrus_invalidate_region() (Wolfgang Bumiller)
+1a184c3: 9pfs: don't try to flush self and avoid QEMU hang on reset (Greg Kurz)
+7f515a9: 9pfs: fix off-by-one error in PDU free list (Greg Kurz)
+d437262: target-arm: Fix aarch64 vec_reg_offset (Richard Henderson)
+74b13f9: target-arm: Fix aarch64 disas_ldst_single_struct (Richard Henderson)
+4bcb497: linux-user: Fix s390x safe-syscall for z900 (Richard Henderson)
+8029d55: nbd/client: fix drop_sync [CVE-2017-2630] (Vladimir Sementsov-Ogievskiy)
+a3aeb9f: thread-pool: add missing qemu_bh_cancel in completion function (Peter Lieven)
+34e9c09: s390x/css: reassign subchannel if schid is changed after migration (Dong Jia Shi)
+9e9483d: virtio-pci: reset modern vq meta data (Jason Wang)
+ba9c51d: scsi: mptsas: fix the wrong reading size in fetch request (Li Qiang)
+495756e: e1000e: correctly tear down MSI-X memory regions (Paolo Bonzini)
+9ad2696: NetRxPkt: Account buffer with ETH header in IOV length (Dmitry Fleytman)
+15ad066: NetRxPkt: Do not try to pull more data than present (Dmitry Fleytman)
+7cfd9c1: NetRxPkt: Fix memory corruption on VLAN header stripping (Dmitry Fleytman)
+bddf223: eth: Extend vlan stripping functions (Dmitry Fleytman)
+fc8e94c: cirrus: add blit_is_unsafe call to cirrus_bitblt_cputovideo (CVE-2017-2620) (Gerd Hoffmann)
+5e46417: hmp: fix block_set_io_throttle (Eric Blake)
+d5506b3: qga: ignore EBUSY when freezing a filesystem (Peter Lieven)
+823fb68: target-i386: correctly propagate retaddr into SVM helpers (Paolo Bonzini)
+270a46e: apic: reset apic_delivered global variable on machine reset (Pavel Dovgalyuk)
+f61f76c: target/sparc: Restore ldstub of odd asis (Richard Henderson)
+8ac427c: block/vmdk: Fix the endian problem of buf_len and lba (QingFeng Hao)
+1d1d922: target-ppc, tcg: fix usermode segfault with pthread_create() (Sam Bobroff)
+adf2c47: vnc: do not disconnect on EAGAIN (Michael Tokarev)
+1a156ae: sd: sdhci: check data length during dma_memory_read (Prasad J Pandit)
+3b8f27f: block/nfs: fix naming of runtime opts (Peter Lieven)
+44d24c7: block/nfs: fix NULL pointer dereference in URI parsing (Peter Lieven)
+5f4b901: s390x/kvm: fix small race reboot vs. cmma (Christian Borntraeger)
+5e40f28: target/s390x: use "qemu" cpu model in user mode (David Hildenbrand)
+d2b9063: ahci: advertise HOST_CAP_64 (Ladi Prosek)
+d8dea6f: cpu-exec: fix icount out-of-bounds access (Paolo Bonzini)
+f054cea: cirrus: fix oob access issue (CVE-2017-2615) (Li Qiang)
+5fb07a7: s390x/kvm: fix cmma reset for KVM (Christian Borntraeger)
+3fb4b3c: block/iscsi: avoid data corruption with cache=writeback (Peter Lieven)
+a626117: virtio: fix up max size checks (Michael S. Tsirkin)
+3b33cba: ui: use evdev keymap when running under wayland (Daniel P. Berrange)
+50b468d: tcg/aarch64: Fix tcg_out_movi (Richard Henderson)
+028fbea: tcg/aarch64: Fix addsub2 for 0+C (Richard Henderson)
+6e8052f: char: fix ctrl-a b not working (Marc-André Lureau)
+5c60c6e: x86: ioapic: fix fail migration when irqchip=split (Peter Xu)
+2ab8276: display: cirrus: ignore source pitch value as needed in blit_is_unsafe (Bruce Rogers)
+662a97d: exec: Add missing rcu_read_unlock (Roman Kapl)
+d6f1194: virtio-crypto: fix possible integer and heap overflow (Gonglei)
+f47bf08: qemu-thread: fix qemu_thread_set_name() race in qemu_thread_create() (Caoxinhua)
+8a65625: ui/vnc: Fix problem with sending too many bytes as server name (Thomas Huth)
+9f6cb91: scsi-block: fix direction of BYTCHK test for VERIFY commands (Paolo Bonzini)
+dc659e3: ui/gtk: fix crash at startup when no console is available (Hervé Poussineau)
+87ede19: pc: fix crash in rtc_set_memory() if initial cpu is marked as hotplugged (Igor Mammedov)
+da95bfe: 9pfs: fix crash when fsdev is missing (Greg Kurz)
+7830be7: virtio: fix vq->inuse recalc after migr (Halil Pasic)
+620a65d: pci: fix error message for express slots (Michael S. Tsirkin)
+9d14f0c: balloon: Don't balloon roms (Dr. David Alan Gilbert)
+04cde53: machine: Convert abstract typename on compat_props to subclass names (Eduardo Habkost)
+a15785c: 9pfs: fix vulnerability in openat_dir() and local_unlinkat_common() (Greg Kurz)
+3731a25: 9pfs: fix O_PATH build break with older glibc versions (Greg Kurz)
+7e9a1c4: 9pfs: don't use AT_EMPTY_PATH in local_set_cred_passthrough() (Greg Kurz)
+059f751: 9pfs: fail local_statfs() earlier (Greg Kurz)
+bb07a37: 9pfs: fix fd leak in local_opendir() (Greg Kurz)
+719e6dd: 9pfs: fix bogus fd check in local_remove() (Greg Kurz)
+05a92c2: 9pfs: local: drop unused code (Greg Kurz)
+9c5cb58: 9pfs: local: open2: don't follow symlinks (Greg Kurz)
+c8c9aab: 9pfs: local: mkdir: don't follow symlinks (Greg Kurz)
+5b24a96: 9pfs: local: mknod: don't follow symlinks (Greg Kurz)
+9f4ba82: 9pfs: local: symlink: don't follow symlinks (Greg Kurz)
+62d1dbb: 9pfs: local: chown: don't follow symlinks (Greg Kurz)
+ea9e59b: 9pfs: local: chmod: don't follow symlinks (Greg Kurz)
+e314b1b: 9pfs: local: link: don't follow symlinks (Greg Kurz)
+d7322e1: 9pfs: local: improve error handling in link op (Greg Kurz)
+d93d06a: 9pfs: local: rename: use renameat (Greg Kurz)
+0f3490f: 9pfs: local: renameat: don't follow symlinks (Greg Kurz)
+cfe40e1: 9pfs: local: lstat: don't follow symlinks (Greg Kurz)
+3439290: 9pfs: local: readlink: don't follow symlinks (Greg Kurz)
+ec10ead: 9pfs: local: truncate: don't follow symlinks (Greg Kurz)
+d3c54bf: 9pfs: local: statfs: don't follow symlinks (Greg Kurz)
+91225c6: 9pfs: local: utimensat: don't follow symlinks (Greg Kurz)
+4286f58: 9pfs: local: remove: don't follow symlinks (Greg Kurz)
+0bb9955: 9pfs: local: unlinkat: don't follow symlinks (Greg Kurz)
+a9f46b8: 9pfs: local: lremovexattr: don't follow symlinks (Greg Kurz)
+ed6083a: 9pfs: local: lsetxattr: don't follow symlinks (Greg Kurz)
+d10142c: 9pfs: local: llistxattr: don't follow symlinks (Greg Kurz)
+6c1e3a1: 9pfs: local: lgetxattr: don't follow symlinks (Greg Kurz)
+acf22d2: 9pfs: local: open/opendir: don't follow symlinks (Greg Kurz)
+54f951d: 9pfs: local: keep a file descriptor on the shared folder (Greg Kurz)
+984bd0a: 9pfs: introduce relative_openat_nofollow() helper (Greg Kurz)
+52d43ff: 9pfs: remove side-effects in local_open() and local_opendir() (Greg Kurz)
+e103f9e: 9pfs: remove side-effects in local_init() (Greg Kurz)
+2c4f0f6: 9pfs: local: move xattr security ops to 9p-xattr.c (Greg Kurz)
+
+diff --git a/VERSION b/VERSION
+index 834f262..dbe5900 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-2.8.0
++2.8.1
+diff --git a/block/iscsi.c b/block/iscsi.c
+index 0960929..a1ac8d9 100644
+--- a/block/iscsi.c
++++ b/block/iscsi.c
+@@ -498,14 +498,18 @@ iscsi_allocmap_update(IscsiLun *iscsilun, int64_t sector_num,
+     if (allocated) {
+         bitmap_set(iscsilun->allocmap, cl_num_expanded, nb_cls_expanded);
+     } else {
+-        bitmap_clear(iscsilun->allocmap, cl_num_shrunk, nb_cls_shrunk);
++        if (nb_cls_shrunk > 0) {
++            bitmap_clear(iscsilun->allocmap, cl_num_shrunk, nb_cls_shrunk);
++        }
+     }
+ 
+     if (iscsilun->allocmap_valid == NULL) {
+         return;
+     }
+     if (valid) {
+-        bitmap_set(iscsilun->allocmap_valid, cl_num_shrunk, nb_cls_shrunk);
++        if (nb_cls_shrunk > 0) {
++            bitmap_set(iscsilun->allocmap_valid, cl_num_shrunk, nb_cls_shrunk);
++        }
+     } else {
+         bitmap_clear(iscsilun->allocmap_valid, cl_num_expanded,
+                      nb_cls_expanded);
+diff --git a/block/nfs.c b/block/nfs.c
+index a490660..31de959 100644
+--- a/block/nfs.c
++++ b/block/nfs.c
+@@ -108,12 +108,13 @@ static int nfs_parse_uri(const char *filename, QDict *options, Error **errp)
+     qdict_put(options, "path", qstring_from_str(uri->path));
+ 
+     for (i = 0; i < qp->n; i++) {
++        unsigned long long val;
+         if (!qp->p[i].value) {
+             error_setg(errp, "Value for NFS parameter expected: %s",
+                        qp->p[i].name);
+             goto out;
+         }
+-        if (parse_uint_full(qp->p[i].value, NULL, 0)) {
++        if (parse_uint_full(qp->p[i].value, &val, 0)) {
+             error_setg(errp, "Illegal value for NFS parameter: %s",
+                        qp->p[i].name);
+             goto out;
+@@ -357,27 +358,27 @@ static QemuOptsList runtime_opts = {
+             .help = "Path of the image on the host",
+         },
+         {
+-            .name = "uid",
++            .name = "user",
+             .type = QEMU_OPT_NUMBER,
+             .help = "UID value to use when talking to the server",
+         },
+         {
+-            .name = "gid",
++            .name = "group",
+             .type = QEMU_OPT_NUMBER,
+             .help = "GID value to use when talking to the server",
+         },
+         {
+-            .name = "tcp-syncnt",
++            .name = "tcp-syn-count",
+             .type = QEMU_OPT_NUMBER,
+             .help = "Number of SYNs to send during the session establish",
+         },
+         {
+-            .name = "readahead",
++            .name = "readahead-size",
+             .type = QEMU_OPT_NUMBER,
+             .help = "Set the readahead size in bytes",
+         },
+         {
+-            .name = "pagecache",
++            .name = "page-cache-size",
+             .type = QEMU_OPT_NUMBER,
+             .help = "Set the pagecache size in bytes",
+         },
+@@ -506,29 +507,29 @@ static int64_t nfs_client_open(NFSClient *client, QDict *options,
+         goto fail;
+     }
+ 
+-    if (qemu_opt_get(opts, "uid")) {
+-        client->uid = qemu_opt_get_number(opts, "uid", 0);
++    if (qemu_opt_get(opts, "user")) {
++        client->uid = qemu_opt_get_number(opts, "user", 0);
+         nfs_set_uid(client->context, client->uid);
+     }
+ 
+-    if (qemu_opt_get(opts, "gid")) {
+-        client->gid = qemu_opt_get_number(opts, "gid", 0);
++    if (qemu_opt_get(opts, "group")) {
++        client->gid = qemu_opt_get_number(opts, "group", 0);
+         nfs_set_gid(client->context, client->gid);
+     }
+ 
+-    if (qemu_opt_get(opts, "tcp-syncnt")) {
+-        client->tcp_syncnt = qemu_opt_get_number(opts, "tcp-syncnt", 0);
++    if (qemu_opt_get(opts, "tcp-syn-count")) {
++        client->tcp_syncnt = qemu_opt_get_number(opts, "tcp-syn-count", 0);
+         nfs_set_tcp_syncnt(client->context, client->tcp_syncnt);
+     }
+ 
+ #ifdef LIBNFS_FEATURE_READAHEAD
+-    if (qemu_opt_get(opts, "readahead")) {
++    if (qemu_opt_get(opts, "readahead-size")) {
+         if (open_flags & BDRV_O_NOCACHE) {
+             error_setg(errp, "Cannot enable NFS readahead "
+                              "if cache.direct = on");
+             goto fail;
+         }
+-        client->readahead = qemu_opt_get_number(opts, "readahead", 0);
++        client->readahead = qemu_opt_get_number(opts, "readahead-size", 0);
+         if (client->readahead > QEMU_NFS_MAX_READAHEAD_SIZE) {
+             error_report("NFS Warning: Truncating NFS readahead "
+                          "size to %d", QEMU_NFS_MAX_READAHEAD_SIZE);
+@@ -543,13 +544,13 @@ static int64_t nfs_client_open(NFSClient *client, QDict *options,
+ #endif
+ 
+ #ifdef LIBNFS_FEATURE_PAGECACHE
+-    if (qemu_opt_get(opts, "pagecache")) {
++    if (qemu_opt_get(opts, "page-cache-size")) {
+         if (open_flags & BDRV_O_NOCACHE) {
+             error_setg(errp, "Cannot enable NFS pagecache "
+                              "if cache.direct = on");
+             goto fail;
+         }
+-        client->pagecache = qemu_opt_get_number(opts, "pagecache", 0);
++        client->pagecache = qemu_opt_get_number(opts, "page-cache-size", 0);
+         if (client->pagecache > QEMU_NFS_MAX_PAGECACHE_SIZE) {
+             error_report("NFS Warning: Truncating NFS pagecache "
+                          "size to %d pages", QEMU_NFS_MAX_PAGECACHE_SIZE);
+@@ -802,22 +803,22 @@ static void nfs_refresh_filename(BlockDriverState *bs, QDict *options)
+     qdict_put(opts, "path", qstring_from_str(client->path));
+ 
+     if (client->uid) {
+-        qdict_put(opts, "uid", qint_from_int(client->uid));
++        qdict_put(opts, "user", qint_from_int(client->uid));
+     }
+     if (client->gid) {
+-        qdict_put(opts, "gid", qint_from_int(client->gid));
++        qdict_put(opts, "group", qint_from_int(client->gid));
+     }
+     if (client->tcp_syncnt) {
+-        qdict_put(opts, "tcp-syncnt",
+-                      qint_from_int(client->tcp_syncnt));
++        qdict_put(opts, "tcp-syn-cnt",
++                  qint_from_int(client->tcp_syncnt));
+     }
+     if (client->readahead) {
+-        qdict_put(opts, "readahead",
+-                      qint_from_int(client->readahead));
++        qdict_put(opts, "readahead-size",
++                  qint_from_int(client->readahead));
+     }
+     if (client->pagecache) {
+-        qdict_put(opts, "pagecache",
+-                      qint_from_int(client->pagecache));
++        qdict_put(opts, "page-cache-size",
++                  qint_from_int(client->pagecache));
+     }
+     if (client->debug) {
+         qdict_put(opts, "debug", qint_from_int(client->debug));
+diff --git a/block/vmdk.c b/block/vmdk.c
+index a11c27a..26e5f95 100644
+--- a/block/vmdk.c
++++ b/block/vmdk.c
+@@ -1354,8 +1354,8 @@ static int vmdk_write_extent(VmdkExtent *extent, int64_t cluster_offset,
+             goto out;
+         }
+ 
+-        data->lba = offset >> BDRV_SECTOR_BITS;
+-        data->size = buf_len;
++        data->lba = cpu_to_le64(offset >> BDRV_SECTOR_BITS);
++        data->size = cpu_to_le32(buf_len);
+ 
+         n_bytes = buf_len + sizeof(VmdkGrainMarker);
+         iov = (struct iovec) {
+diff --git a/cpu-exec.c b/cpu-exec.c
+index 4188fed..964eb01 100644
+--- a/cpu-exec.c
++++ b/cpu-exec.c
+@@ -491,7 +491,7 @@ static inline void cpu_handle_interrupt(CPUState *cpu,
+             X86CPU *x86_cpu = X86_CPU(cpu);
+             CPUArchState *env = &x86_cpu->env;
+             replay_interrupt();
+-            cpu_svm_check_intercept_param(env, SVM_EXIT_INIT, 0);
++            cpu_svm_check_intercept_param(env, SVM_EXIT_INIT, 0, 0);
+             do_cpu_init(x86_cpu);
+             cpu->exception_index = EXCP_HALTED;
+             cpu_loop_exit(cpu);
+@@ -542,7 +542,7 @@ static inline void cpu_loop_exec_tb(CPUState *cpu, TranslationBlock *tb,
+ 
+     trace_exec_tb(tb, tb->pc);
+     ret = cpu_tb_exec(cpu, tb);
+-    *last_tb = (TranslationBlock *)(ret & ~TB_EXIT_MASK);
++    tb = (TranslationBlock *)(ret & ~TB_EXIT_MASK);
+     *tb_exit = ret & TB_EXIT_MASK;
+     switch (*tb_exit) {
+     case TB_EXIT_REQUESTED:
+@@ -566,6 +566,7 @@ static inline void cpu_loop_exec_tb(CPUState *cpu, TranslationBlock *tb,
+         abort();
+ #else
+         int insns_left = cpu->icount_decr.u32;
++        *last_tb = NULL;
+         if (cpu->icount_extra && insns_left >= 0) {
+             /* Refill decrementer and continue execution.  */
+             cpu->icount_extra += insns_left;
+@@ -575,17 +576,17 @@ static inline void cpu_loop_exec_tb(CPUState *cpu, TranslationBlock *tb,
+         } else {
+             if (insns_left > 0) {
+                 /* Execute remaining instructions.  */
+-                cpu_exec_nocache(cpu, insns_left, *last_tb, false);
++                cpu_exec_nocache(cpu, insns_left, tb, false);
+                 align_clocks(sc, cpu);
+             }
+             cpu->exception_index = EXCP_INTERRUPT;
+-            *last_tb = NULL;
+             cpu_loop_exit(cpu);
+         }
+         break;
+ #endif
+     }
+     default:
++        *last_tb = tb;
+         break;
+     }
+ }
+diff --git a/exec.c b/exec.c
+index 08c558e..6fda455 100644
+--- a/exec.c
++++ b/exec.c
+@@ -2927,6 +2927,7 @@ bool address_space_access_valid(AddressSpace *as, hwaddr addr, int len, bool is_
+         if (!memory_access_is_direct(mr, is_write)) {
+             l = memory_access_size(mr, l, addr);
+             if (!memory_region_access_valid(mr, xlat, l, is_write)) {
++                rcu_read_unlock();
+                 return false;
+             }
+         }
+diff --git a/hmp.c b/hmp.c
+index b869617..428dfdd 100644
+--- a/hmp.c
++++ b/hmp.c
+@@ -1551,6 +1551,7 @@ void hmp_block_set_io_throttle(Monitor *mon, const QDict *qdict)
+ {
+     Error *err = NULL;
+     BlockIOThrottle throttle = {
++        .has_device = true,
+         .device = (char *) qdict_get_str(qdict, "device"),
+         .bps = qdict_get_int(qdict, "bps"),
+         .bps_rd = qdict_get_int(qdict, "bps_rd"),
+@@ -1808,7 +1809,6 @@ void hmp_object_add(Monitor *mon, const QDict *qdict)
+ {
+     Error *err = NULL;
+     QemuOpts *opts;
+-    Visitor *v;
+     Object *obj = NULL;
+ 
+     opts = qemu_opts_from_qdict(qemu_find_opts("object"), qdict, &err);
+@@ -1817,9 +1817,7 @@ void hmp_object_add(Monitor *mon, const QDict *qdict)
+         return;
+     }
+ 
+-    v = opts_visitor_new(opts);
+-    obj = user_creatable_add(qdict, v, &err);
+-    visit_free(v);
++    obj = user_creatable_add_opts(opts, &err);
+     qemu_opts_del(opts);
+ 
+     if (err) {
+diff --git a/hw/9pfs/9p-local.c b/hw/9pfs/9p-local.c
+index 845675e..227de61 100644
+--- a/hw/9pfs/9p-local.c
++++ b/hw/9pfs/9p-local.c
+@@ -13,7 +13,9 @@
+ 
+ #include "qemu/osdep.h"
+ #include "9p.h"
++#include "9p-local.h"
+ #include "9p-xattr.h"
++#include "9p-util.h"
+ #include "fsdev/qemu-fsdev.h"   /* local_ops */
+ #include <arpa/inet.h>
+ #include <pwd.h>
+@@ -43,40 +45,62 @@
+ #define BTRFS_SUPER_MAGIC 0x9123683E
+ #endif
+ 
+-#define VIRTFS_META_DIR ".virtfs_metadata"
++typedef struct {
++    int mountfd;
++} LocalData;
+ 
+-static char *local_mapped_attr_path(FsContext *ctx, const char *path)
++int local_open_nofollow(FsContext *fs_ctx, const char *path, int flags,
++                        mode_t mode)
+ {
+-    int dirlen;
+-    const char *name = strrchr(path, '/');
+-    if (name) {
+-        dirlen = name - path;
+-        ++name;
+-    } else {
+-        name = path;
+-        dirlen = 0;
++    LocalData *data = fs_ctx->private;
++
++    /* All paths are relative to the path data->mountfd points to */
++    while (*path == '/') {
++        path++;
+     }
+-    return g_strdup_printf("%s/%.*s/%s/%s", ctx->fs_root,
+-                           dirlen, path, VIRTFS_META_DIR, name);
++
++    return relative_openat_nofollow(data->mountfd, path, flags, mode);
++}
++
++int local_opendir_nofollow(FsContext *fs_ctx, const char *path)
++{
++    return local_open_nofollow(fs_ctx, path, O_DIRECTORY | O_RDONLY, 0);
++}
++
++static void renameat_preserve_errno(int odirfd, const char *opath, int ndirfd,
++                                    const char *npath)
++{
++    int serrno = errno;
++    renameat(odirfd, opath, ndirfd, npath);
++    errno = serrno;
+ }
+ 
+-static FILE *local_fopen(const char *path, const char *mode)
++static void unlinkat_preserve_errno(int dirfd, const char *path, int flags)
++{
++    int serrno = errno;
++    unlinkat(dirfd, path, flags);
++    errno = serrno;
++}
++
++#define VIRTFS_META_DIR ".virtfs_metadata"
++
++static FILE *local_fopenat(int dirfd, const char *name, const char *mode)
+ {
+     int fd, o_mode = 0;
+     FILE *fp;
+-    int flags = O_NOFOLLOW;
++    int flags;
+     /*
+      * only supports two modes
+      */
+     if (mode[0] == 'r') {
+-        flags |= O_RDONLY;
++        flags = O_RDONLY;
+     } else if (mode[0] == 'w') {
+-        flags |= O_WRONLY | O_TRUNC | O_CREAT;
++        flags = O_WRONLY | O_TRUNC | O_CREAT;
+         o_mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+     } else {
+         return NULL;
+     }
+-    fd = open(path, flags, o_mode);
++    fd = openat_file(dirfd, name, flags, o_mode);
+     if (fd == -1) {
+         return NULL;
+     }
+@@ -88,16 +112,20 @@ static FILE *local_fopen(const char *path, const char *mode)
+ }
+ 
+ #define ATTR_MAX 100
+-static void local_mapped_file_attr(FsContext *ctx, const char *path,
++static void local_mapped_file_attr(int dirfd, const char *name,
+                                    struct stat *stbuf)
+ {
+     FILE *fp;
+     char buf[ATTR_MAX];
+-    char *attr_path;
++    int map_dirfd;
+ 
+-    attr_path = local_mapped_attr_path(ctx, path);
+-    fp = local_fopen(attr_path, "r");
+-    g_free(attr_path);
++    map_dirfd = openat_dir(dirfd, VIRTFS_META_DIR);
++    if (map_dirfd == -1) {
++        return;
++    }
++
++    fp = local_fopenat(map_dirfd, name, "r");
++    close_preserve_errno(map_dirfd);
+     if (!fp) {
+         return;
+     }
+@@ -119,12 +147,17 @@ static void local_mapped_file_attr(FsContext *ctx, const char *path,
+ 
+ static int local_lstat(FsContext *fs_ctx, V9fsPath *fs_path, struct stat *stbuf)
+ {
+-    int err;
+-    char *buffer;
+-    char *path = fs_path->data;
++    int err = -1;
++    char *dirpath = g_path_get_dirname(fs_path->data);
++    char *name = g_path_get_basename(fs_path->data);
++    int dirfd;
+ 
+-    buffer = rpath(fs_ctx, path);
+-    err =  lstat(buffer, stbuf);
++    dirfd = local_opendir_nofollow(fs_ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
++
++    err = fstatat(dirfd, name, stbuf, AT_SYMLINK_NOFOLLOW);
+     if (err) {
+         goto err_out;
+     }
+@@ -134,87 +167,83 @@ static int local_lstat(FsContext *fs_ctx, V9fsPath *fs_path, struct stat *stbuf)
+         gid_t tmp_gid;
+         mode_t tmp_mode;
+         dev_t tmp_dev;
+-        if (getxattr(buffer, "user.virtfs.uid", &tmp_uid, sizeof(uid_t)) > 0) {
++
++        if (fgetxattrat_nofollow(dirfd, name, "user.virtfs.uid", &tmp_uid,
++                                 sizeof(uid_t)) > 0) {
+             stbuf->st_uid = le32_to_cpu(tmp_uid);
+         }
+-        if (getxattr(buffer, "user.virtfs.gid", &tmp_gid, sizeof(gid_t)) > 0) {
++        if (fgetxattrat_nofollow(dirfd, name, "user.virtfs.gid", &tmp_gid,
++                                 sizeof(gid_t)) > 0) {
+             stbuf->st_gid = le32_to_cpu(tmp_gid);
+         }
+-        if (getxattr(buffer, "user.virtfs.mode",
+-                    &tmp_mode, sizeof(mode_t)) > 0) {
++        if (fgetxattrat_nofollow(dirfd, name, "user.virtfs.mode", &tmp_mode,
++                                 sizeof(mode_t)) > 0) {
+             stbuf->st_mode = le32_to_cpu(tmp_mode);
+         }
+-        if (getxattr(buffer, "user.virtfs.rdev", &tmp_dev, sizeof(dev_t)) > 0) {
++        if (fgetxattrat_nofollow(dirfd, name, "user.virtfs.rdev", &tmp_dev,
++                                 sizeof(dev_t)) > 0) {
+             stbuf->st_rdev = le64_to_cpu(tmp_dev);
+         }
+     } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        local_mapped_file_attr(fs_ctx, path, stbuf);
++        local_mapped_file_attr(dirfd, name, stbuf);
+     }
+ 
+ err_out:
+-    g_free(buffer);
+-    return err;
+-}
+-
+-static int local_create_mapped_attr_dir(FsContext *ctx, const char *path)
+-{
+-    int err;
+-    char *attr_dir;
+-    char *tmp_path = g_strdup(path);
+-
+-    attr_dir = g_strdup_printf("%s/%s/%s",
+-             ctx->fs_root, dirname(tmp_path), VIRTFS_META_DIR);
+-
+-    err = mkdir(attr_dir, 0700);
+-    if (err < 0 && errno == EEXIST) {
+-        err = 0;
+-    }
+-    g_free(attr_dir);
+-    g_free(tmp_path);
++    close_preserve_errno(dirfd);
++out:
++    g_free(name);
++    g_free(dirpath);
+     return err;
+ }
+ 
+-static int local_set_mapped_file_attr(FsContext *ctx,
+-                                      const char *path, FsCred *credp)
++static int local_set_mapped_file_attrat(int dirfd, const char *name,
++                                        FsCred *credp)
+ {
+     FILE *fp;
+-    int ret = 0;
++    int ret;
+     char buf[ATTR_MAX];
+-    char *attr_path;
+     int uid = -1, gid = -1, mode = -1, rdev = -1;
++    int map_dirfd;
++
++    ret = mkdirat(dirfd, VIRTFS_META_DIR, 0700);
++    if (ret < 0 && errno != EEXIST) {
++        return -1;
++    }
+ 
+-    attr_path = local_mapped_attr_path(ctx, path);
+-    fp = local_fopen(attr_path, "r");
++    map_dirfd = openat_dir(dirfd, VIRTFS_META_DIR);
++    if (map_dirfd == -1) {
++        return -1;
++    }
++
++    fp = local_fopenat(map_dirfd, name, "r");
+     if (!fp) {
+-        goto create_map_file;
++        if (errno == ENOENT) {
++            goto update_map_file;
++        } else {
++            close_preserve_errno(map_dirfd);
++            return -1;
++        }
+     }
+     memset(buf, 0, ATTR_MAX);
+     while (fgets(buf, ATTR_MAX, fp)) {
+         if (!strncmp(buf, "virtfs.uid", 10)) {
+-            uid = atoi(buf+11);
++            uid = atoi(buf + 11);
+         } else if (!strncmp(buf, "virtfs.gid", 10)) {
+-            gid = atoi(buf+11);
++            gid = atoi(buf + 11);
+         } else if (!strncmp(buf, "virtfs.mode", 11)) {
+-            mode = atoi(buf+12);
++            mode = atoi(buf + 12);
+         } else if (!strncmp(buf, "virtfs.rdev", 11)) {
+-            rdev = atoi(buf+12);
++            rdev = atoi(buf + 12);
+         }
+         memset(buf, 0, ATTR_MAX);
+     }
+     fclose(fp);
+-    goto update_map_file;
+-
+-create_map_file:
+-    ret = local_create_mapped_attr_dir(ctx, path);
+-    if (ret < 0) {
+-        goto err_out;
+-    }
+ 
+ update_map_file:
+-    fp = local_fopen(attr_path, "w");
++    fp = local_fopenat(map_dirfd, name, "w");
++    close_preserve_errno(map_dirfd);
+     if (!fp) {
+-        ret = -1;
+-        goto err_out;
++        return -1;
+     }
+ 
+     if (credp->fc_uid != -1) {
+@@ -230,7 +259,6 @@ update_map_file:
+         rdev = credp->fc_rdev;
+     }
+ 
+-
+     if (uid != -1) {
+         fprintf(fp, "virtfs.uid=%d\n", uid);
+     }
+@@ -245,39 +273,71 @@ update_map_file:
+     }
+     fclose(fp);
+ 
+-err_out:
+-    g_free(attr_path);
++    return 0;
++}
++
++static int fchmodat_nofollow(int dirfd, const char *name, mode_t mode)
++{
++    int fd, ret;
++
++    /* FIXME: this should be handled with fchmodat(AT_SYMLINK_NOFOLLOW).
++     * Unfortunately, the linux kernel doesn't implement it yet. As an
++     * alternative, let's open the file and use fchmod() instead. This
++     * may fail depending on the permissions of the file, but it is the
++     * best we can do to avoid TOCTTOU. We first try to open read-only
++     * in case name points to a directory. If that fails, we try write-only
++     * in case name doesn't point to a directory.
++     */
++    fd = openat_file(dirfd, name, O_RDONLY, 0);
++    if (fd == -1) {
++        /* In case the file is writable-only and isn't a directory. */
++        if (errno == EACCES) {
++            fd = openat_file(dirfd, name, O_WRONLY, 0);
++        }
++        if (fd == -1 && errno == EISDIR) {
++            errno = EACCES;
++        }
++    }
++    if (fd == -1) {
++        return -1;
++    }
++    ret = fchmod(fd, mode);
++    close_preserve_errno(fd);
+     return ret;
+ }
+ 
+-static int local_set_xattr(const char *path, FsCred *credp)
++static int local_set_xattrat(int dirfd, const char *path, FsCred *credp)
+ {
+     int err;
+ 
+     if (credp->fc_uid != -1) {
+         uint32_t tmp_uid = cpu_to_le32(credp->fc_uid);
+-        err = setxattr(path, "user.virtfs.uid", &tmp_uid, sizeof(uid_t), 0);
++        err = fsetxattrat_nofollow(dirfd, path, "user.virtfs.uid", &tmp_uid,
++                                   sizeof(uid_t), 0);
+         if (err) {
+             return err;
+         }
+     }
+     if (credp->fc_gid != -1) {
+         uint32_t tmp_gid = cpu_to_le32(credp->fc_gid);
+-        err = setxattr(path, "user.virtfs.gid", &tmp_gid, sizeof(gid_t), 0);
++        err = fsetxattrat_nofollow(dirfd, path, "user.virtfs.gid", &tmp_gid,
++                                   sizeof(gid_t), 0);
+         if (err) {
+             return err;
+         }
+     }
+     if (credp->fc_mode != -1) {
+         uint32_t tmp_mode = cpu_to_le32(credp->fc_mode);
+-        err = setxattr(path, "user.virtfs.mode", &tmp_mode, sizeof(mode_t), 0);
++        err = fsetxattrat_nofollow(dirfd, path, "user.virtfs.mode", &tmp_mode,
++                                   sizeof(mode_t), 0);
+         if (err) {
+             return err;
+         }
+     }
+     if (credp->fc_rdev != -1) {
+         uint64_t tmp_rdev = cpu_to_le64(credp->fc_rdev);
+-        err = setxattr(path, "user.virtfs.rdev", &tmp_rdev, sizeof(dev_t), 0);
++        err = fsetxattrat_nofollow(dirfd, path, "user.virtfs.rdev", &tmp_rdev,
++                                   sizeof(dev_t), 0);
+         if (err) {
+             return err;
+         }
+@@ -285,58 +345,56 @@ static int local_set_xattr(const char *path, FsCred *credp)
+     return 0;
+ }
+ 
+-static int local_post_create_passthrough(FsContext *fs_ctx, const char *path,
+-                                         FsCred *credp)
++static int local_set_cred_passthrough(FsContext *fs_ctx, int dirfd,
++                                      const char *name, FsCred *credp)
+ {
+-    char *buffer;
+-
+-    buffer = rpath(fs_ctx, path);
+-    if (lchown(buffer, credp->fc_uid, credp->fc_gid) < 0) {
++    if (fchownat(dirfd, name, credp->fc_uid, credp->fc_gid,
++                 AT_SYMLINK_NOFOLLOW) < 0) {
+         /*
+          * If we fail to change ownership and if we are
+          * using security model none. Ignore the error
+          */
+         if ((fs_ctx->export_flags & V9FS_SEC_MASK) != V9FS_SM_NONE) {
+-            goto err;
++            return -1;
+         }
+     }
+ 
+-    if (chmod(buffer, credp->fc_mode & 07777) < 0) {
+-        goto err;
+-    }
+-
+-    g_free(buffer);
+-    return 0;
+-err:
+-    g_free(buffer);
+-    return -1;
++    return fchmodat_nofollow(dirfd, name, credp->fc_mode & 07777);
+ }
+ 
+ static ssize_t local_readlink(FsContext *fs_ctx, V9fsPath *fs_path,
+                               char *buf, size_t bufsz)
+ {
+     ssize_t tsize = -1;
+-    char *buffer;
+-    char *path = fs_path->data;
+ 
+     if ((fs_ctx->export_flags & V9FS_SM_MAPPED) ||
+         (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE)) {
+         int fd;
+-        buffer = rpath(fs_ctx, path);
+-        fd = open(buffer, O_RDONLY | O_NOFOLLOW);
+-        g_free(buffer);
++
++        fd = local_open_nofollow(fs_ctx, fs_path->data, O_RDONLY, 0);
+         if (fd == -1) {
+             return -1;
+         }
+         do {
+             tsize = read(fd, (void *)buf, bufsz);
+         } while (tsize == -1 && errno == EINTR);
+-        close(fd);
++        close_preserve_errno(fd);
+     } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+                (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, path);
+-        tsize = readlink(buffer, buf, bufsz);
+-        g_free(buffer);
++        char *dirpath = g_path_get_dirname(fs_path->data);
++        char *name = g_path_get_basename(fs_path->data);
++        int dirfd;
++
++        dirfd = local_opendir_nofollow(fs_ctx, dirpath);
++        if (dirfd == -1) {
++            goto out;
++        }
++
++        tsize = readlinkat(dirfd, name, buf, bufsz);
++        close_preserve_errno(dirfd);
++    out:
++        g_free(name);
++        g_free(dirpath);
+     }
+     return tsize;
+ }
+@@ -354,27 +412,33 @@ static int local_closedir(FsContext *ctx, V9fsFidOpenState *fs)
+ static int local_open(FsContext *ctx, V9fsPath *fs_path,
+                       int flags, V9fsFidOpenState *fs)
+ {
+-    char *buffer;
+-    char *path = fs_path->data;
++    int fd;
+ 
+-    buffer = rpath(ctx, path);
+-    fs->fd = open(buffer, flags | O_NOFOLLOW);
+-    g_free(buffer);
++    fd = local_open_nofollow(ctx, fs_path->data, flags, 0);
++    if (fd == -1) {
++        return -1;
++    }
++    fs->fd = fd;
+     return fs->fd;
+ }
+ 
+ static int local_opendir(FsContext *ctx,
+                          V9fsPath *fs_path, V9fsFidOpenState *fs)
+ {
+-    char *buffer;
+-    char *path = fs_path->data;
++    int dirfd;
++    DIR *stream;
+ 
+-    buffer = rpath(ctx, path);
+-    fs->dir.stream = opendir(buffer);
+-    g_free(buffer);
+-    if (!fs->dir.stream) {
++    dirfd = local_opendir_nofollow(ctx, fs_path->data);
++    if (dirfd == -1) {
+         return -1;
+     }
++
++    stream = fdopendir(dirfd);
++    if (!stream) {
++        close(dirfd);
++        return -1;
++    }
++    fs->dir.stream = stream;
+     return 0;
+ }
+ 
+@@ -464,145 +528,122 @@ static ssize_t local_pwritev(FsContext *ctx, V9fsFidOpenState *fs,
+ 
+ static int local_chmod(FsContext *fs_ctx, V9fsPath *fs_path, FsCred *credp)
+ {
+-    char *buffer;
++    char *dirpath = g_path_get_dirname(fs_path->data);
++    char *name = g_path_get_basename(fs_path->data);
+     int ret = -1;
+-    char *path = fs_path->data;
++    int dirfd;
++
++    dirfd = local_opendir_nofollow(fs_ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
+ 
+     if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
+-        buffer = rpath(fs_ctx, path);
+-        ret = local_set_xattr(buffer, credp);
+-        g_free(buffer);
++        ret = local_set_xattrat(dirfd, name, credp);
+     } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        return local_set_mapped_file_attr(fs_ctx, path, credp);
+-    } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+-               (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, path);
+-        ret = chmod(buffer, credp->fc_mode);
+-        g_free(buffer);
++        ret = local_set_mapped_file_attrat(dirfd, name, credp);
++    } else if (fs_ctx->export_flags & V9FS_SM_PASSTHROUGH ||
++               fs_ctx->export_flags & V9FS_SM_NONE) {
++        ret = fchmodat_nofollow(dirfd, name, credp->fc_mode);
+     }
++    close_preserve_errno(dirfd);
++
++out:
++    g_free(dirpath);
++    g_free(name);
+     return ret;
+ }
+ 
+ static int local_mknod(FsContext *fs_ctx, V9fsPath *dir_path,
+                        const char *name, FsCred *credp)
+ {
+-    char *path;
+     int err = -1;
+-    int serrno = 0;
+-    V9fsString fullname;
+-    char *buffer = NULL;
++    int dirfd;
+ 
+-    v9fs_string_init(&fullname);
+-    v9fs_string_sprintf(&fullname, "%s/%s", dir_path->data, name);
+-    path = fullname.data;
++    dirfd = local_opendir_nofollow(fs_ctx, dir_path->data);
++    if (dirfd == -1) {
++        return -1;
++    }
+ 
+-    /* Determine the security model */
+-    if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
+-        buffer = rpath(fs_ctx, path);
+-        err = mknod(buffer, SM_LOCAL_MODE_BITS|S_IFREG, 0);
++    if (fs_ctx->export_flags & V9FS_SM_MAPPED ||
++        fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
++        err = mknodat(dirfd, name, SM_LOCAL_MODE_BITS | S_IFREG, 0);
+         if (err == -1) {
+             goto out;
+         }
+-        err = local_set_xattr(buffer, credp);
+-        if (err == -1) {
+-            serrno = errno;
+-            goto err_end;
+-        }
+-    } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+ 
+-        buffer = rpath(fs_ctx, path);
+-        err = mknod(buffer, SM_LOCAL_MODE_BITS|S_IFREG, 0);
+-        if (err == -1) {
+-            goto out;
++        if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
++            err = local_set_xattrat(dirfd, name, credp);
++        } else {
++            err = local_set_mapped_file_attrat(dirfd, name, credp);
+         }
+-        err = local_set_mapped_file_attr(fs_ctx, path, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+-    } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+-               (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, path);
+-        err = mknod(buffer, credp->fc_mode, credp->fc_rdev);
++    } else if (fs_ctx->export_flags & V9FS_SM_PASSTHROUGH ||
++               fs_ctx->export_flags & V9FS_SM_NONE) {
++        err = mknodat(dirfd, name, credp->fc_mode, credp->fc_rdev);
+         if (err == -1) {
+             goto out;
+         }
+-        err = local_post_create_passthrough(fs_ctx, path, credp);
++        err = local_set_cred_passthrough(fs_ctx, dirfd, name, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+     }
+     goto out;
+ 
+ err_end:
+-    remove(buffer);
+-    errno = serrno;
++    unlinkat_preserve_errno(dirfd, name, 0);
+ out:
+-    g_free(buffer);
+-    v9fs_string_free(&fullname);
++    close_preserve_errno(dirfd);
+     return err;
+ }
+ 
+ static int local_mkdir(FsContext *fs_ctx, V9fsPath *dir_path,
+                        const char *name, FsCred *credp)
+ {
+-    char *path;
+     int err = -1;
+-    int serrno = 0;
+-    V9fsString fullname;
+-    char *buffer = NULL;
++    int dirfd;
+ 
+-    v9fs_string_init(&fullname);
+-    v9fs_string_sprintf(&fullname, "%s/%s", dir_path->data, name);
+-    path = fullname.data;
++    dirfd = local_opendir_nofollow(fs_ctx, dir_path->data);
++    if (dirfd == -1) {
++        return -1;
++    }
+ 
+-    /* Determine the security model */
+-    if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
+-        buffer = rpath(fs_ctx, path);
+-        err = mkdir(buffer, SM_LOCAL_DIR_MODE_BITS);
++    if (fs_ctx->export_flags & V9FS_SM_MAPPED ||
++        fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
++        err = mkdirat(dirfd, name, SM_LOCAL_DIR_MODE_BITS);
+         if (err == -1) {
+             goto out;
+         }
+-        credp->fc_mode = credp->fc_mode|S_IFDIR;
+-        err = local_set_xattr(buffer, credp);
+-        if (err == -1) {
+-            serrno = errno;
+-            goto err_end;
+-        }
+-    } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        buffer = rpath(fs_ctx, path);
+-        err = mkdir(buffer, SM_LOCAL_DIR_MODE_BITS);
+-        if (err == -1) {
+-            goto out;
++        credp->fc_mode = credp->fc_mode | S_IFDIR;
++
++        if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
++            err = local_set_xattrat(dirfd, name, credp);
++        } else {
++            err = local_set_mapped_file_attrat(dirfd, name, credp);
+         }
+-        credp->fc_mode = credp->fc_mode|S_IFDIR;
+-        err = local_set_mapped_file_attr(fs_ctx, path, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+-    } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+-               (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, path);
+-        err = mkdir(buffer, credp->fc_mode);
++    } else if (fs_ctx->export_flags & V9FS_SM_PASSTHROUGH ||
++               fs_ctx->export_flags & V9FS_SM_NONE) {
++        err = mkdirat(dirfd, name, credp->fc_mode);
+         if (err == -1) {
+             goto out;
+         }
+-        err = local_post_create_passthrough(fs_ctx, path, credp);
++        err = local_set_cred_passthrough(fs_ctx, dirfd, name, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+     }
+     goto out;
+ 
+ err_end:
+-    remove(buffer);
+-    errno = serrno;
++    unlinkat_preserve_errno(dirfd, name, AT_REMOVEDIR);
+ out:
+-    g_free(buffer);
+-    v9fs_string_free(&fullname);
++    close_preserve_errno(dirfd);
+     return err;
+ }
+ 
+@@ -650,62 +691,45 @@ static int local_fstat(FsContext *fs_ctx, int fid_type,
+ static int local_open2(FsContext *fs_ctx, V9fsPath *dir_path, const char *name,
+                        int flags, FsCred *credp, V9fsFidOpenState *fs)
+ {
+-    char *path;
+     int fd = -1;
+     int err = -1;
+-    int serrno = 0;
+-    V9fsString fullname;
+-    char *buffer = NULL;
++    int dirfd;
+ 
+     /*
+      * Mark all the open to not follow symlinks
+      */
+     flags |= O_NOFOLLOW;
+ 
+-    v9fs_string_init(&fullname);
+-    v9fs_string_sprintf(&fullname, "%s/%s", dir_path->data, name);
+-    path = fullname.data;
++    dirfd = local_opendir_nofollow(fs_ctx, dir_path->data);
++    if (dirfd == -1) {
++        return -1;
++    }
+ 
+     /* Determine the security model */
+-    if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
+-        buffer = rpath(fs_ctx, path);
+-        fd = open(buffer, flags, SM_LOCAL_MODE_BITS);
++    if (fs_ctx->export_flags & V9FS_SM_MAPPED ||
++        fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
++        fd = openat_file(dirfd, name, flags, SM_LOCAL_MODE_BITS);
+         if (fd == -1) {
+-            err = fd;
+             goto out;
+         }
+         credp->fc_mode = credp->fc_mode|S_IFREG;
+-        /* Set cleint credentials in xattr */
+-        err = local_set_xattr(buffer, credp);
+-        if (err == -1) {
+-            serrno = errno;
+-            goto err_end;
+-        }
+-    } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        buffer = rpath(fs_ctx, path);
+-        fd = open(buffer, flags, SM_LOCAL_MODE_BITS);
+-        if (fd == -1) {
+-            err = fd;
+-            goto out;
++        if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
++            /* Set cleint credentials in xattr */
++            err = local_set_xattrat(dirfd, name, credp);
++        } else {
++            err = local_set_mapped_file_attrat(dirfd, name, credp);
+         }
+-        credp->fc_mode = credp->fc_mode|S_IFREG;
+-        /* Set client credentials in .virtfs_metadata directory files */
+-        err = local_set_mapped_file_attr(fs_ctx, path, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+     } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+                (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, path);
+-        fd = open(buffer, flags, credp->fc_mode);
++        fd = openat_file(dirfd, name, flags, credp->fc_mode);
+         if (fd == -1) {
+-            err = fd;
+             goto out;
+         }
+-        err = local_post_create_passthrough(fs_ctx, path, credp);
++        err = local_set_cred_passthrough(fs_ctx, dirfd, name, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+     }
+@@ -714,12 +738,11 @@ static int local_open2(FsContext *fs_ctx, V9fsPath *dir_path, const char *name,
+     goto out;
+ 
+ err_end:
+-    close(fd);
+-    remove(buffer);
+-    errno = serrno;
++    unlinkat_preserve_errno(dirfd, name,
++                            flags & O_DIRECTORY ? AT_REMOVEDIR : 0);
++    close_preserve_errno(fd);
+ out:
+-    g_free(buffer);
+-    v9fs_string_free(&fullname);
++    close_preserve_errno(dirfd);
+     return err;
+ }
+ 
+@@ -728,23 +751,22 @@ static int local_symlink(FsContext *fs_ctx, const char *oldpath,
+                          V9fsPath *dir_path, const char *name, FsCred *credp)
+ {
+     int err = -1;
+-    int serrno = 0;
+-    char *newpath;
+-    V9fsString fullname;
+-    char *buffer = NULL;
++    int dirfd;
+ 
+-    v9fs_string_init(&fullname);
+-    v9fs_string_sprintf(&fullname, "%s/%s", dir_path->data, name);
+-    newpath = fullname.data;
++    dirfd = local_opendir_nofollow(fs_ctx, dir_path->data);
++    if (dirfd == -1) {
++        return -1;
++    }
+ 
+     /* Determine the security model */
+-    if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
++    if (fs_ctx->export_flags & V9FS_SM_MAPPED ||
++        fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+         int fd;
+         ssize_t oldpath_size, write_size;
+-        buffer = rpath(fs_ctx, newpath);
+-        fd = open(buffer, O_CREAT|O_EXCL|O_RDWR|O_NOFOLLOW, SM_LOCAL_MODE_BITS);
++
++        fd = openat_file(dirfd, name, O_CREAT | O_EXCL | O_RDWR,
++                         SM_LOCAL_MODE_BITS);
+         if (fd == -1) {
+-            err = fd;
+             goto out;
+         }
+         /* Write the oldpath (target) to the file. */
+@@ -752,218 +774,204 @@ static int local_symlink(FsContext *fs_ctx, const char *oldpath,
+         do {
+             write_size = write(fd, (void *)oldpath, oldpath_size);
+         } while (write_size == -1 && errno == EINTR);
++        close_preserve_errno(fd);
+ 
+         if (write_size != oldpath_size) {
+-            serrno = errno;
+-            close(fd);
+-            err = -1;
+             goto err_end;
+         }
+-        close(fd);
+         /* Set cleint credentials in symlink's xattr */
+-        credp->fc_mode = credp->fc_mode|S_IFLNK;
+-        err = local_set_xattr(buffer, credp);
+-        if (err == -1) {
+-            serrno = errno;
+-            goto err_end;
+-        }
+-    } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        int fd;
+-        ssize_t oldpath_size, write_size;
+-        buffer = rpath(fs_ctx, newpath);
+-        fd = open(buffer, O_CREAT|O_EXCL|O_RDWR|O_NOFOLLOW, SM_LOCAL_MODE_BITS);
+-        if (fd == -1) {
+-            err = fd;
+-            goto out;
+-        }
+-        /* Write the oldpath (target) to the file. */
+-        oldpath_size = strlen(oldpath);
+-        do {
+-            write_size = write(fd, (void *)oldpath, oldpath_size);
+-        } while (write_size == -1 && errno == EINTR);
++        credp->fc_mode = credp->fc_mode | S_IFLNK;
+ 
+-        if (write_size != oldpath_size) {
+-            serrno = errno;
+-            close(fd);
+-            err = -1;
+-            goto err_end;
++        if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
++            err = local_set_xattrat(dirfd, name, credp);
++        } else {
++            err = local_set_mapped_file_attrat(dirfd, name, credp);
+         }
+-        close(fd);
+-        /* Set cleint credentials in symlink's xattr */
+-        credp->fc_mode = credp->fc_mode|S_IFLNK;
+-        err = local_set_mapped_file_attr(fs_ctx, newpath, credp);
+         if (err == -1) {
+-            serrno = errno;
+             goto err_end;
+         }
+-    } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+-               (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, newpath);
+-        err = symlink(oldpath, buffer);
++    } else if (fs_ctx->export_flags & V9FS_SM_PASSTHROUGH ||
++               fs_ctx->export_flags & V9FS_SM_NONE) {
++        err = symlinkat(oldpath, dirfd, name);
+         if (err) {
+             goto out;
+         }
+-        err = lchown(buffer, credp->fc_uid, credp->fc_gid);
++        err = fchownat(dirfd, name, credp->fc_uid, credp->fc_gid,
++                       AT_SYMLINK_NOFOLLOW);
+         if (err == -1) {
+             /*
+              * If we fail to change ownership and if we are
+              * using security model none. Ignore the error
+              */
+             if ((fs_ctx->export_flags & V9FS_SEC_MASK) != V9FS_SM_NONE) {
+-                serrno = errno;
+                 goto err_end;
+-            } else
++            } else {
+                 err = 0;
++            }
+         }
+     }
+     goto out;
+ 
+ err_end:
+-    remove(buffer);
+-    errno = serrno;
++    unlinkat_preserve_errno(dirfd, name, 0);
+ out:
+-    g_free(buffer);
+-    v9fs_string_free(&fullname);
++    close_preserve_errno(dirfd);
+     return err;
+ }
+ 
+ static int local_link(FsContext *ctx, V9fsPath *oldpath,
+                       V9fsPath *dirpath, const char *name)
+ {
+-    int ret;
+-    V9fsString newpath;
+-    char *buffer, *buffer1;
++    char *odirpath = g_path_get_dirname(oldpath->data);
++    char *oname = g_path_get_basename(oldpath->data);
++    int ret = -1;
++    int odirfd, ndirfd;
++
++    odirfd = local_opendir_nofollow(ctx, odirpath);
++    if (odirfd == -1) {
++        goto out;
++    }
+ 
+-    v9fs_string_init(&newpath);
+-    v9fs_string_sprintf(&newpath, "%s/%s", dirpath->data, name);
++    ndirfd = local_opendir_nofollow(ctx, dirpath->data);
++    if (ndirfd == -1) {
++        close_preserve_errno(odirfd);
++        goto out;
++    }
+ 
+-    buffer = rpath(ctx, oldpath->data);
+-    buffer1 = rpath(ctx, newpath.data);
+-    ret = link(buffer, buffer1);
+-    g_free(buffer);
+-    g_free(buffer1);
++    ret = linkat(odirfd, oname, ndirfd, name, 0);
++    if (ret < 0) {
++        goto out_close;
++    }
+ 
+     /* now link the virtfs_metadata files */
+-    if (!ret && (ctx->export_flags & V9FS_SM_MAPPED_FILE)) {
+-        /* Link the .virtfs_metadata files. Create the metada directory */
+-        ret = local_create_mapped_attr_dir(ctx, newpath.data);
+-        if (ret < 0) {
+-            goto err_out;
++    if (ctx->export_flags & V9FS_SM_MAPPED_FILE) {
++        int omap_dirfd, nmap_dirfd;
++
++        ret = mkdirat(ndirfd, VIRTFS_META_DIR, 0700);
++        if (ret < 0 && errno != EEXIST) {
++            goto err_undo_link;
++        }
++
++        omap_dirfd = openat_dir(odirfd, VIRTFS_META_DIR);
++        if (omap_dirfd == -1) {
++            goto err;
++        }
++
++        nmap_dirfd = openat_dir(ndirfd, VIRTFS_META_DIR);
++        if (nmap_dirfd == -1) {
++            close_preserve_errno(omap_dirfd);
++            goto err;
+         }
+-        buffer = local_mapped_attr_path(ctx, oldpath->data);
+-        buffer1 = local_mapped_attr_path(ctx, newpath.data);
+-        ret = link(buffer, buffer1);
+-        g_free(buffer);
+-        g_free(buffer1);
++
++        ret = linkat(omap_dirfd, oname, nmap_dirfd, name, 0);
++        close_preserve_errno(nmap_dirfd);
++        close_preserve_errno(omap_dirfd);
+         if (ret < 0 && errno != ENOENT) {
+-            goto err_out;
++            goto err_undo_link;
+         }
+-    }
+-err_out:
+-    v9fs_string_free(&newpath);
+-    return ret;
+-}
+ 
+-static int local_truncate(FsContext *ctx, V9fsPath *fs_path, off_t size)
+-{
+-    char *buffer;
+-    int ret;
+-    char *path = fs_path->data;
++        ret = 0;
++    }
++    goto out_close;
+ 
+-    buffer = rpath(ctx, path);
+-    ret = truncate(buffer, size);
+-    g_free(buffer);
++err:
++    ret = -1;
++err_undo_link:
++    unlinkat_preserve_errno(ndirfd, name, 0);
++out_close:
++    close_preserve_errno(ndirfd);
++    close_preserve_errno(odirfd);
++out:
++    g_free(oname);
++    g_free(odirpath);
+     return ret;
+ }
+ 
+-static int local_rename(FsContext *ctx, const char *oldpath,
+-                        const char *newpath)
++static int local_truncate(FsContext *ctx, V9fsPath *fs_path, off_t size)
+ {
+-    int err;
+-    char *buffer, *buffer1;
++    int fd, ret;
+ 
+-    if (ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        err = local_create_mapped_attr_dir(ctx, newpath);
+-        if (err < 0) {
+-            return err;
+-        }
+-        /* rename the .virtfs_metadata files */
+-        buffer = local_mapped_attr_path(ctx, oldpath);
+-        buffer1 = local_mapped_attr_path(ctx, newpath);
+-        err = rename(buffer, buffer1);
+-        g_free(buffer);
+-        g_free(buffer1);
+-        if (err < 0 && errno != ENOENT) {
+-            return err;
+-        }
++    fd = local_open_nofollow(ctx, fs_path->data, O_WRONLY, 0);
++    if (fd == -1) {
++        return -1;
+     }
+-
+-    buffer = rpath(ctx, oldpath);
+-    buffer1 = rpath(ctx, newpath);
+-    err = rename(buffer, buffer1);
+-    g_free(buffer);
+-    g_free(buffer1);
+-    return err;
++    ret = ftruncate(fd, size);
++    close_preserve_errno(fd);
++    return ret;
+ }
+ 
+ static int local_chown(FsContext *fs_ctx, V9fsPath *fs_path, FsCred *credp)
+ {
+-    char *buffer;
++    char *dirpath = g_path_get_dirname(fs_path->data);
++    char *name = g_path_get_basename(fs_path->data);
+     int ret = -1;
+-    char *path = fs_path->data;
++    int dirfd;
++
++    dirfd = local_opendir_nofollow(fs_ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
+ 
+     if ((credp->fc_uid == -1 && credp->fc_gid == -1) ||
+         (fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
+         (fs_ctx->export_flags & V9FS_SM_NONE)) {
+-        buffer = rpath(fs_ctx, path);
+-        ret = lchown(buffer, credp->fc_uid, credp->fc_gid);
+-        g_free(buffer);
++        ret = fchownat(dirfd, name, credp->fc_uid, credp->fc_gid,
++                       AT_SYMLINK_NOFOLLOW);
+     } else if (fs_ctx->export_flags & V9FS_SM_MAPPED) {
+-        buffer = rpath(fs_ctx, path);
+-        ret = local_set_xattr(buffer, credp);
+-        g_free(buffer);
++        ret = local_set_xattrat(dirfd, name, credp);
+     } else if (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        return local_set_mapped_file_attr(fs_ctx, path, credp);
++        ret = local_set_mapped_file_attrat(dirfd, name, credp);
+     }
++
++    close_preserve_errno(dirfd);
++out:
++    g_free(name);
++    g_free(dirpath);
+     return ret;
+ }
+ 
+ static int local_utimensat(FsContext *s, V9fsPath *fs_path,
+                            const struct timespec *buf)
+ {
+-    char *buffer;
+-    int ret;
+-    char *path = fs_path->data;
++    char *dirpath = g_path_get_dirname(fs_path->data);
++    char *name = g_path_get_basename(fs_path->data);
++    int dirfd, ret = -1;
++
++    dirfd = local_opendir_nofollow(s, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
+ 
+-    buffer = rpath(s, path);
+-    ret = qemu_utimens(buffer, buf);
+-    g_free(buffer);
++    ret = utimensat(dirfd, name, buf, AT_SYMLINK_NOFOLLOW);
++    close_preserve_errno(dirfd);
++out:
++    g_free(dirpath);
++    g_free(name);
+     return ret;
+ }
+ 
+-static int local_remove(FsContext *ctx, const char *path)
++static int local_unlinkat_common(FsContext *ctx, int dirfd, const char *name,
++                                 int flags)
+ {
+-    int err;
+-    struct stat stbuf;
+-    char *buffer;
++    int ret = -1;
+ 
+     if (ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        buffer = rpath(ctx, path);
+-        err =  lstat(buffer, &stbuf);
+-        g_free(buffer);
+-        if (err) {
+-            goto err_out;
+-        }
+-        /*
+-         * If directory remove .virtfs_metadata contained in the
+-         * directory
+-         */
+-        if (S_ISDIR(stbuf.st_mode)) {
+-            buffer = g_strdup_printf("%s/%s/%s", ctx->fs_root,
+-                                     path, VIRTFS_META_DIR);
+-            err = remove(buffer);
+-            g_free(buffer);
+-            if (err < 0 && errno != ENOENT) {
++        int map_dirfd;
++
++        if (flags == AT_REMOVEDIR) {
++            int fd;
++
++            fd = openat_dir(dirfd, name);
++            if (fd == -1) {
++                goto err_out;
++            }
++            /*
++             * If directory remove .virtfs_metadata contained in the
++             * directory
++             */
++            ret = unlinkat(fd, VIRTFS_META_DIR, AT_REMOVEDIR);
++            close_preserve_errno(fd);
++            if (ret < 0 && errno != ENOENT) {
+                 /*
+                  * We didn't had the .virtfs_metadata file. May be file created
+                  * in non-mapped mode ?. Ignore ENOENT.
+@@ -973,12 +981,12 @@ static int local_remove(FsContext *ctx, const char *path)
+         }
+         /*
+          * Now remove the name from parent directory
+-         * .virtfs_metadata directory
++         * .virtfs_metadata directory.
+          */
+-        buffer = local_mapped_attr_path(ctx, path);
+-        err = remove(buffer);
+-        g_free(buffer);
+-        if (err < 0 && errno != ENOENT) {
++        map_dirfd = openat_dir(dirfd, VIRTFS_META_DIR);
++        ret = unlinkat(map_dirfd, name, 0);
++        close_preserve_errno(map_dirfd);
++        if (ret < 0 && errno != ENOENT) {
+             /*
+              * We didn't had the .virtfs_metadata file. May be file created
+              * in non-mapped mode ?. Ignore ENOENT.
+@@ -987,10 +995,39 @@ static int local_remove(FsContext *ctx, const char *path)
+         }
+     }
+ 
+-    buffer = rpath(ctx, path);
+-    err = remove(buffer);
+-    g_free(buffer);
++    ret = unlinkat(dirfd, name, flags);
++err_out:
++    return ret;
++}
++
++static int local_remove(FsContext *ctx, const char *path)
++{
++    struct stat stbuf;
++    char *dirpath = g_path_get_dirname(path);
++    char *name = g_path_get_basename(path);
++    int flags = 0;
++    int dirfd;
++    int err = -1;
++
++    dirfd = local_opendir_nofollow(ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
++
++    if (fstatat(dirfd, path, &stbuf, AT_SYMLINK_NOFOLLOW) < 0) {
++        goto err_out;
++    }
++
++    if (S_ISDIR(stbuf.st_mode)) {
++        flags |= AT_REMOVEDIR;
++    }
++
++    err = local_unlinkat_common(ctx, dirfd, name, flags);
+ err_out:
++    close_preserve_errno(dirfd);
++out:
++    g_free(name);
++    g_free(dirpath);
+     return err;
+ }
+ 
+@@ -1014,13 +1051,14 @@ static int local_fsync(FsContext *ctx, int fid_type,
+ 
+ static int local_statfs(FsContext *s, V9fsPath *fs_path, struct statfs *stbuf)
+ {
+-    char *buffer;
+-    int ret;
+-    char *path = fs_path->data;
++    int fd, ret;
+ 
+-    buffer = rpath(s, path);
+-    ret = statfs(buffer, stbuf);
+-    g_free(buffer);
++    fd = local_open_nofollow(s, fs_path->data, O_RDONLY, 0);
++    if (fd == -1) {
++        return -1;
++    }
++    ret = fstatfs(fd, stbuf);
++    close_preserve_errno(fd);
+     return ret;
+ }
+ 
+@@ -1072,70 +1110,105 @@ static int local_renameat(FsContext *ctx, V9fsPath *olddir,
+                           const char *new_name)
+ {
+     int ret;
+-    V9fsString old_full_name, new_full_name;
++    int odirfd, ndirfd;
+ 
+-    v9fs_string_init(&old_full_name);
+-    v9fs_string_init(&new_full_name);
++    odirfd = local_opendir_nofollow(ctx, olddir->data);
++    if (odirfd == -1) {
++        return -1;
++    }
+ 
+-    v9fs_string_sprintf(&old_full_name, "%s/%s", olddir->data, old_name);
+-    v9fs_string_sprintf(&new_full_name, "%s/%s", newdir->data, new_name);
++    ndirfd = local_opendir_nofollow(ctx, newdir->data);
++    if (ndirfd == -1) {
++        close_preserve_errno(odirfd);
++        return -1;
++    }
++
++    ret = renameat(odirfd, old_name, ndirfd, new_name);
++    if (ret < 0) {
++        goto out;
++    }
+ 
+-    ret = local_rename(ctx, old_full_name.data, new_full_name.data);
+-    v9fs_string_free(&old_full_name);
+-    v9fs_string_free(&new_full_name);
++    if (ctx->export_flags & V9FS_SM_MAPPED_FILE) {
++        int omap_dirfd, nmap_dirfd;
++
++        ret = mkdirat(ndirfd, VIRTFS_META_DIR, 0700);
++        if (ret < 0 && errno != EEXIST) {
++            goto err_undo_rename;
++        }
++
++        omap_dirfd = openat_dir(odirfd, VIRTFS_META_DIR);
++        if (omap_dirfd == -1) {
++            goto err;
++        }
++
++        nmap_dirfd = openat_dir(ndirfd, VIRTFS_META_DIR);
++        if (nmap_dirfd == -1) {
++            close_preserve_errno(omap_dirfd);
++            goto err;
++        }
++
++        /* rename the .virtfs_metadata files */
++        ret = renameat(omap_dirfd, old_name, nmap_dirfd, new_name);
++        close_preserve_errno(nmap_dirfd);
++        close_preserve_errno(omap_dirfd);
++        if (ret < 0 && errno != ENOENT) {
++            goto err_undo_rename;
++        }
++
++        ret = 0;
++    }
++    goto out;
++
++err:
++    ret = -1;
++err_undo_rename:
++    renameat_preserve_errno(ndirfd, new_name, odirfd, old_name);
++out:
++    close_preserve_errno(ndirfd);
++    close_preserve_errno(odirfd);
+     return ret;
+ }
+ 
++static void v9fs_path_init_dirname(V9fsPath *path, const char *str)
++{
++    path->data = g_path_get_dirname(str);
++    path->size = strlen(path->data) + 1;
++}
++
++static int local_rename(FsContext *ctx, const char *oldpath,
++                        const char *newpath)
++{
++    int err;
++    char *oname = g_path_get_basename(oldpath);
++    char *nname = g_path_get_basename(newpath);
++    V9fsPath olddir, newdir;
++
++    v9fs_path_init_dirname(&olddir, oldpath);
++    v9fs_path_init_dirname(&newdir, newpath);
++
++    err = local_renameat(ctx, &olddir, oname, &newdir, nname);
++
++    v9fs_path_free(&newdir);
++    v9fs_path_free(&olddir);
++    g_free(nname);
++    g_free(oname);
++
++    return err;
++}
++
+ static int local_unlinkat(FsContext *ctx, V9fsPath *dir,
+                           const char *name, int flags)
+ {
+     int ret;
+-    V9fsString fullname;
+-    char *buffer;
++    int dirfd;
+ 
+-    v9fs_string_init(&fullname);
+-
+-    v9fs_string_sprintf(&fullname, "%s/%s", dir->data, name);
+-    if (ctx->export_flags & V9FS_SM_MAPPED_FILE) {
+-        if (flags == AT_REMOVEDIR) {
+-            /*
+-             * If directory remove .virtfs_metadata contained in the
+-             * directory
+-             */
+-            buffer = g_strdup_printf("%s/%s/%s", ctx->fs_root,
+-                                     fullname.data, VIRTFS_META_DIR);
+-            ret = remove(buffer);
+-            g_free(buffer);
+-            if (ret < 0 && errno != ENOENT) {
+-                /*
+-                 * We didn't had the .virtfs_metadata file. May be file created
+-                 * in non-mapped mode ?. Ignore ENOENT.
+-                 */
+-                goto err_out;
+-            }
+-        }
+-        /*
+-         * Now remove the name from parent directory
+-         * .virtfs_metadata directory.
+-         */
+-        buffer = local_mapped_attr_path(ctx, fullname.data);
+-        ret = remove(buffer);
+-        g_free(buffer);
+-        if (ret < 0 && errno != ENOENT) {
+-            /*
+-             * We didn't had the .virtfs_metadata file. May be file created
+-             * in non-mapped mode ?. Ignore ENOENT.
+-             */
+-            goto err_out;
+-        }
++    dirfd = local_opendir_nofollow(ctx, dir->data);
++    if (dirfd == -1) {
++        return -1;
+     }
+-    /* Remove the name finally */
+-    buffer = rpath(ctx, fullname.data);
+-    ret = remove(buffer);
+-    g_free(buffer);
+ 
+-err_out:
+-    v9fs_string_free(&fullname);
++    ret = local_unlinkat_common(ctx, dirfd, name, flags);
++    close_preserve_errno(dirfd);
+     return ret;
+ }
+ 
+@@ -1169,8 +1242,31 @@ static int local_ioc_getversion(FsContext *ctx, V9fsPath *path,
+ 
+ static int local_init(FsContext *ctx)
+ {
+-    int err = 0;
+     struct statfs stbuf;
++    LocalData *data = g_malloc(sizeof(*data));
++
++    data->mountfd = open(ctx->fs_root, O_DIRECTORY | O_RDONLY);
++    if (data->mountfd == -1) {
++        goto err;
++    }
++
++#ifdef FS_IOC_GETVERSION
++    /*
++     * use ioc_getversion only if the ioctl is definied
++     */
++    if (fstatfs(data->mountfd, &stbuf) < 0) {
++        close_preserve_errno(data->mountfd);
++        goto err;
++    }
++    switch (stbuf.f_type) {
++    case EXT2_SUPER_MAGIC:
++    case BTRFS_SUPER_MAGIC:
++    case REISERFS_SUPER_MAGIC:
++    case XFS_SUPER_MAGIC:
++        ctx->exops.get_st_gen = local_ioc_getversion;
++        break;
++    }
++#endif
+ 
+     if (ctx->export_flags & V9FS_SM_PASSTHROUGH) {
+         ctx->xops = passthrough_xattr_ops;
+@@ -1186,23 +1282,21 @@ static int local_init(FsContext *ctx)
+         ctx->xops = passthrough_xattr_ops;
+     }
+     ctx->export_flags |= V9FS_PATHNAME_FSCONTEXT;
+-#ifdef FS_IOC_GETVERSION
+-    /*
+-     * use ioc_getversion only if the iocl is definied
+-     */
+-    err = statfs(ctx->fs_root, &stbuf);
+-    if (!err) {
+-        switch (stbuf.f_type) {
+-        case EXT2_SUPER_MAGIC:
+-        case BTRFS_SUPER_MAGIC:
+-        case REISERFS_SUPER_MAGIC:
+-        case XFS_SUPER_MAGIC:
+-            ctx->exops.get_st_gen = local_ioc_getversion;
+-            break;
+-        }
+-    }
+-#endif
+-    return err;
++
++    ctx->private = data;
++    return 0;
++
++err:
++    g_free(data);
++    return -1;
++}
++
++static void local_cleanup(FsContext *ctx)
++{
++    LocalData *data = ctx->private;
++
++    close(data->mountfd);
++    g_free(data);
+ }
+ 
+ static int local_parse_opts(QemuOpts *opts, struct FsDriverEntry *fse)
+@@ -1245,6 +1339,7 @@ static int local_parse_opts(QemuOpts *opts, struct FsDriverEntry *fse)
+ FileOperations local_ops = {
+     .parse_opts = local_parse_opts,
+     .init  = local_init,
++    .cleanup = local_cleanup,
+     .lstat = local_lstat,
+     .readlink = local_readlink,
+     .close = local_close,
+diff --git a/hw/9pfs/9p-local.h b/hw/9pfs/9p-local.h
+new file mode 100644
+index 0000000..32c7274
+--- /dev/null
++++ b/hw/9pfs/9p-local.h
+@@ -0,0 +1,20 @@
++/*
++ * 9p local backend utilities
++ *
++ * Copyright IBM, Corp. 2017
++ *
++ * Authors:
++ *  Greg Kurz <groug@kaod.org>
++ *
++ * This work is licensed under the terms of the GNU GPL, version 2 or later.
++ * See the COPYING file in the top-level directory.
++ */
++
++#ifndef QEMU_9P_LOCAL_H
++#define QEMU_9P_LOCAL_H
++
++int local_open_nofollow(FsContext *fs_ctx, const char *path, int flags,
++                        mode_t mode);
++int local_opendir_nofollow(FsContext *fs_ctx, const char *path);
++
++#endif
+diff --git a/hw/9pfs/9p-posix-acl.c b/hw/9pfs/9p-posix-acl.c
+index ec00318..bbf8906 100644
+--- a/hw/9pfs/9p-posix-acl.c
++++ b/hw/9pfs/9p-posix-acl.c
+@@ -25,13 +25,7 @@
+ static ssize_t mp_pacl_getxattr(FsContext *ctx, const char *path,
+                                 const char *name, void *value, size_t size)
+ {
+-    char *buffer;
+-    ssize_t ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lgetxattr(buffer, MAP_ACL_ACCESS, value, size);
+-    g_free(buffer);
+-    return ret;
++    return local_getxattr_nofollow(ctx, path, MAP_ACL_ACCESS, value, size);
+ }
+ 
+ static ssize_t mp_pacl_listxattr(FsContext *ctx, const char *path,
+@@ -56,23 +50,16 @@ static ssize_t mp_pacl_listxattr(FsContext *ctx, const char *path,
+ static int mp_pacl_setxattr(FsContext *ctx, const char *path, const char *name,
+                             void *value, size_t size, int flags)
+ {
+-    char *buffer;
+-    int ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lsetxattr(buffer, MAP_ACL_ACCESS, value, size, flags);
+-    g_free(buffer);
+-    return ret;
++    return local_setxattr_nofollow(ctx, path, MAP_ACL_ACCESS, value, size,
++                                   flags);
+ }
+ 
+ static int mp_pacl_removexattr(FsContext *ctx,
+                                const char *path, const char *name)
+ {
+     int ret;
+-    char *buffer;
+ 
+-    buffer = rpath(ctx, path);
+-    ret  = lremovexattr(buffer, MAP_ACL_ACCESS);
++    ret = local_removexattr_nofollow(ctx, path, MAP_ACL_ACCESS);
+     if (ret == -1 && errno == ENODATA) {
+         /*
+          * We don't get ENODATA error when trying to remove a
+@@ -82,20 +69,13 @@ static int mp_pacl_removexattr(FsContext *ctx,
+         errno = 0;
+         ret = 0;
+     }
+-    g_free(buffer);
+     return ret;
+ }
+ 
+ static ssize_t mp_dacl_getxattr(FsContext *ctx, const char *path,
+                                 const char *name, void *value, size_t size)
+ {
+-    char *buffer;
+-    ssize_t ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lgetxattr(buffer, MAP_ACL_DEFAULT, value, size);
+-    g_free(buffer);
+-    return ret;
++    return local_getxattr_nofollow(ctx, path, MAP_ACL_DEFAULT, value, size);
+ }
+ 
+ static ssize_t mp_dacl_listxattr(FsContext *ctx, const char *path,
+@@ -120,23 +100,16 @@ static ssize_t mp_dacl_listxattr(FsContext *ctx, const char *path,
+ static int mp_dacl_setxattr(FsContext *ctx, const char *path, const char *name,
+                             void *value, size_t size, int flags)
+ {
+-    char *buffer;
+-    int ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lsetxattr(buffer, MAP_ACL_DEFAULT, value, size, flags);
+-    g_free(buffer);
+-    return ret;
++    return local_setxattr_nofollow(ctx, path, MAP_ACL_DEFAULT, value, size,
++                                   flags);
+ }
+ 
+ static int mp_dacl_removexattr(FsContext *ctx,
+                                const char *path, const char *name)
+ {
+     int ret;
+-    char *buffer;
+ 
+-    buffer = rpath(ctx, path);
+-    ret  = lremovexattr(buffer, MAP_ACL_DEFAULT);
++    ret = local_removexattr_nofollow(ctx, path, MAP_ACL_DEFAULT);
+     if (ret == -1 && errno == ENODATA) {
+         /*
+          * We don't get ENODATA error when trying to remove a
+@@ -146,7 +119,6 @@ static int mp_dacl_removexattr(FsContext *ctx,
+         errno = 0;
+         ret = 0;
+     }
+-    g_free(buffer);
+     return ret;
+ }
+ 
+diff --git a/hw/9pfs/9p-util.c b/hw/9pfs/9p-util.c
+new file mode 100644
+index 0000000..fdb4d57
+--- /dev/null
++++ b/hw/9pfs/9p-util.c
+@@ -0,0 +1,69 @@
++/*
++ * 9p utilities
++ *
++ * Copyright IBM, Corp. 2017
++ *
++ * Authors:
++ *  Greg Kurz <groug@kaod.org>
++ *
++ * This work is licensed under the terms of the GNU GPL, version 2 or later.
++ * See the COPYING file in the top-level directory.
++ */
++
++#include "qemu/osdep.h"
++#include "qemu/xattr.h"
++#include "9p-util.h"
++
++int relative_openat_nofollow(int dirfd, const char *path, int flags,
++                             mode_t mode)
++{
++    int fd;
++
++    fd = dup(dirfd);
++    if (fd == -1) {
++        return -1;
++    }
++
++    while (*path) {
++        const char *c;
++        int next_fd;
++        char *head;
++
++        /* Only relative paths without consecutive slashes */
++        assert(path[0] != '/');
++
++        head = g_strdup(path);
++        c = strchr(path, '/');
++        if (c) {
++            head[c - path] = 0;
++            next_fd = openat_dir(fd, head);
++        } else {
++            next_fd = openat_file(fd, head, flags, mode);
++        }
++        g_free(head);
++        if (next_fd == -1) {
++            close_preserve_errno(fd);
++            return -1;
++        }
++        close(fd);
++        fd = next_fd;
++
++        if (!c) {
++            break;
++        }
++        path = c + 1;
++    }
++
++    return fd;
++}
++
++ssize_t fgetxattrat_nofollow(int dirfd, const char *filename, const char *name,
++                             void *value, size_t size)
++{
++    char *proc_path = g_strdup_printf("/proc/self/fd/%d/%s", dirfd, filename);
++    int ret;
++
++    ret = lgetxattr(proc_path, name, value, size);
++    g_free(proc_path);
++    return ret;
++}
+diff --git a/hw/9pfs/9p-util.h b/hw/9pfs/9p-util.h
+new file mode 100644
+index 0000000..517027c
+--- /dev/null
++++ b/hw/9pfs/9p-util.h
+@@ -0,0 +1,60 @@
++/*
++ * 9p utilities
++ *
++ * Copyright IBM, Corp. 2017
++ *
++ * Authors:
++ *  Greg Kurz <groug@kaod.org>
++ *
++ * This work is licensed under the terms of the GNU GPL, version 2 or later.
++ * See the COPYING file in the top-level directory.
++ */
++
++#ifndef QEMU_9P_UTIL_H
++#define QEMU_9P_UTIL_H
++
++static inline void close_preserve_errno(int fd)
++{
++    int serrno = errno;
++    close(fd);
++    errno = serrno;
++}
++
++static inline int openat_dir(int dirfd, const char *name)
++{
++#ifdef O_PATH
++#define OPENAT_DIR_O_PATH O_PATH
++#else
++#define OPENAT_DIR_O_PATH 0
++#endif
++    return openat(dirfd, name,
++                  O_DIRECTORY | O_RDONLY | O_NOFOLLOW | OPENAT_DIR_O_PATH);
++}
++
++static inline int openat_file(int dirfd, const char *name, int flags,
++                              mode_t mode)
++{
++    int fd, serrno, ret;
++
++    fd = openat(dirfd, name, flags | O_NOFOLLOW | O_NOCTTY | O_NONBLOCK,
++                mode);
++    if (fd == -1) {
++        return -1;
++    }
++
++    serrno = errno;
++    /* O_NONBLOCK was only needed to open the file. Let's drop it. */
++    ret = fcntl(fd, F_SETFL, flags);
++    assert(!ret);
++    errno = serrno;
++    return fd;
++}
++
++int relative_openat_nofollow(int dirfd, const char *path, int flags,
++                             mode_t mode);
++ssize_t fgetxattrat_nofollow(int dirfd, const char *path, const char *name,
++                             void *value, size_t size);
++int fsetxattrat_nofollow(int dirfd, const char *path, const char *name,
++                         void *value, size_t size, int flags);
++
++#endif
+diff --git a/hw/9pfs/9p-xattr-user.c b/hw/9pfs/9p-xattr-user.c
+index f87530c..2c90817 100644
+--- a/hw/9pfs/9p-xattr-user.c
++++ b/hw/9pfs/9p-xattr-user.c
+@@ -20,9 +20,6 @@
+ static ssize_t mp_user_getxattr(FsContext *ctx, const char *path,
+                                 const char *name, void *value, size_t size)
+ {
+-    char *buffer;
+-    ssize_t ret;
+-
+     if (strncmp(name, "user.virtfs.", 12) == 0) {
+         /*
+          * Don't allow fetch of user.virtfs namesapce
+@@ -31,10 +28,7 @@ static ssize_t mp_user_getxattr(FsContext *ctx, const char *path,
+         errno = ENOATTR;
+         return -1;
+     }
+-    buffer = rpath(ctx, path);
+-    ret = lgetxattr(buffer, name, value, size);
+-    g_free(buffer);
+-    return ret;
++    return local_getxattr_nofollow(ctx, path, name, value, size);
+ }
+ 
+ static ssize_t mp_user_listxattr(FsContext *ctx, const char *path,
+@@ -73,9 +67,6 @@ static ssize_t mp_user_listxattr(FsContext *ctx, const char *path,
+ static int mp_user_setxattr(FsContext *ctx, const char *path, const char *name,
+                             void *value, size_t size, int flags)
+ {
+-    char *buffer;
+-    int ret;
+-
+     if (strncmp(name, "user.virtfs.", 12) == 0) {
+         /*
+          * Don't allow fetch of user.virtfs namesapce
+@@ -84,18 +75,12 @@ static int mp_user_setxattr(FsContext *ctx, const char *path, const char *name,
+         errno = EACCES;
+         return -1;
+     }
+-    buffer = rpath(ctx, path);
+-    ret = lsetxattr(buffer, name, value, size, flags);
+-    g_free(buffer);
+-    return ret;
++    return local_setxattr_nofollow(ctx, path, name, value, size, flags);
+ }
+ 
+ static int mp_user_removexattr(FsContext *ctx,
+                                const char *path, const char *name)
+ {
+-    char *buffer;
+-    int ret;
+-
+     if (strncmp(name, "user.virtfs.", 12) == 0) {
+         /*
+          * Don't allow fetch of user.virtfs namesapce
+@@ -104,10 +89,7 @@ static int mp_user_removexattr(FsContext *ctx,
+         errno = EACCES;
+         return -1;
+     }
+-    buffer = rpath(ctx, path);
+-    ret = lremovexattr(buffer, name);
+-    g_free(buffer);
+-    return ret;
++    return local_removexattr_nofollow(ctx, path, name);
+ }
+ 
+ XattrOperations mapped_user_xattr = {
+diff --git a/hw/9pfs/9p-xattr.c b/hw/9pfs/9p-xattr.c
+index 5d8595e..eec160b 100644
+--- a/hw/9pfs/9p-xattr.c
++++ b/hw/9pfs/9p-xattr.c
+@@ -15,6 +15,8 @@
+ #include "9p.h"
+ #include "fsdev/file-op-9p.h"
+ #include "9p-xattr.h"
++#include "9p-util.h"
++#include "9p-local.h"
+ 
+ 
+ static XattrOperations *get_xattr_operations(XattrOperations **h,
+@@ -58,6 +60,16 @@ ssize_t pt_listxattr(FsContext *ctx, const char *path,
+     return name_size;
+ }
+ 
++static ssize_t flistxattrat_nofollow(int dirfd, const char *filename,
++                                     char *list, size_t size)
++{
++    char *proc_path = g_strdup_printf("/proc/self/fd/%d/%s", dirfd, filename);
++    int ret;
++
++    ret = llistxattr(proc_path, list, size);
++    g_free(proc_path);
++    return ret;
++}
+ 
+ /*
+  * Get the list and pass to each layer to find out whether
+@@ -67,24 +79,37 @@ ssize_t v9fs_list_xattr(FsContext *ctx, const char *path,
+                         void *value, size_t vsize)
+ {
+     ssize_t size = 0;
+-    char *buffer;
+     void *ovalue = value;
+     XattrOperations *xops;
+     char *orig_value, *orig_value_start;
+     ssize_t xattr_len, parsed_len = 0, attr_len;
++    char *dirpath, *name;
++    int dirfd;
+ 
+     /* Get the actual len */
+-    buffer = rpath(ctx, path);
+-    xattr_len = llistxattr(buffer, value, 0);
++    dirpath = g_path_get_dirname(path);
++    dirfd = local_opendir_nofollow(ctx, dirpath);
++    g_free(dirpath);
++    if (dirfd == -1) {
++        return -1;
++    }
++
++    name = g_path_get_basename(path);
++    xattr_len = flistxattrat_nofollow(dirfd, name, value, 0);
+     if (xattr_len <= 0) {
+-        g_free(buffer);
++        g_free(name);
++        close_preserve_errno(dirfd);
+         return xattr_len;
+     }
+ 
+     /* Now fetch the xattr and find the actual size */
+     orig_value = g_malloc(xattr_len);
+-    xattr_len = llistxattr(buffer, orig_value, xattr_len);
+-    g_free(buffer);
++    xattr_len = flistxattrat_nofollow(dirfd, name, orig_value, xattr_len);
++    g_free(name);
++    close_preserve_errno(dirfd);
++    if (xattr_len < 0) {
++        return -1;
++    }
+ 
+     /* store the orig pointer */
+     orig_value_start = orig_value;
+@@ -143,6 +168,135 @@ int v9fs_remove_xattr(FsContext *ctx,
+ 
+ }
+ 
++ssize_t local_getxattr_nofollow(FsContext *ctx, const char *path,
++                                const char *name, void *value, size_t size)
++{
++    char *dirpath = g_path_get_dirname(path);
++    char *filename = g_path_get_basename(path);
++    int dirfd;
++    ssize_t ret = -1;
++
++    dirfd = local_opendir_nofollow(ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
++
++    ret = fgetxattrat_nofollow(dirfd, filename, name, value, size);
++    close_preserve_errno(dirfd);
++out:
++    g_free(dirpath);
++    g_free(filename);
++    return ret;
++}
++
++ssize_t pt_getxattr(FsContext *ctx, const char *path, const char *name,
++                    void *value, size_t size)
++{
++    return local_getxattr_nofollow(ctx, path, name, value, size);
++}
++
++int fsetxattrat_nofollow(int dirfd, const char *filename, const char *name,
++                         void *value, size_t size, int flags)
++{
++    char *proc_path = g_strdup_printf("/proc/self/fd/%d/%s", dirfd, filename);
++    int ret;
++
++    ret = lsetxattr(proc_path, name, value, size, flags);
++    g_free(proc_path);
++    return ret;
++}
++
++ssize_t local_setxattr_nofollow(FsContext *ctx, const char *path,
++                                const char *name, void *value, size_t size,
++                                int flags)
++{
++    char *dirpath = g_path_get_dirname(path);
++    char *filename = g_path_get_basename(path);
++    int dirfd;
++    ssize_t ret = -1;
++
++    dirfd = local_opendir_nofollow(ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
++
++    ret = fsetxattrat_nofollow(dirfd, filename, name, value, size, flags);
++    close_preserve_errno(dirfd);
++out:
++    g_free(dirpath);
++    g_free(filename);
++    return ret;
++}
++
++int pt_setxattr(FsContext *ctx, const char *path, const char *name, void *value,
++                size_t size, int flags)
++{
++    return local_setxattr_nofollow(ctx, path, name, value, size, flags);
++}
++
++static ssize_t fremovexattrat_nofollow(int dirfd, const char *filename,
++                                       const char *name)
++{
++    char *proc_path = g_strdup_printf("/proc/self/fd/%d/%s", dirfd, filename);
++    int ret;
++
++    ret = lremovexattr(proc_path, name);
++    g_free(proc_path);
++    return ret;
++}
++
++ssize_t local_removexattr_nofollow(FsContext *ctx, const char *path,
++                                   const char *name)
++{
++    char *dirpath = g_path_get_dirname(path);
++    char *filename = g_path_get_basename(path);
++    int dirfd;
++    ssize_t ret = -1;
++
++    dirfd = local_opendir_nofollow(ctx, dirpath);
++    if (dirfd == -1) {
++        goto out;
++    }
++
++    ret = fremovexattrat_nofollow(dirfd, filename, name);
++    close_preserve_errno(dirfd);
++out:
++    g_free(dirpath);
++    g_free(filename);
++    return ret;
++}
++
++int pt_removexattr(FsContext *ctx, const char *path, const char *name)
++{
++    return local_removexattr_nofollow(ctx, path, name);
++}
++
++ssize_t notsup_getxattr(FsContext *ctx, const char *path, const char *name,
++                        void *value, size_t size)
++{
++    errno = ENOTSUP;
++    return -1;
++}
++
++int notsup_setxattr(FsContext *ctx, const char *path, const char *name,
++                    void *value, size_t size, int flags)
++{
++    errno = ENOTSUP;
++    return -1;
++}
++
++ssize_t notsup_listxattr(FsContext *ctx, const char *path, char *name,
++                         void *value, size_t size)
++{
++    return 0;
++}
++
++int notsup_removexattr(FsContext *ctx, const char *path, const char *name)
++{
++    errno = ENOTSUP;
++    return -1;
++}
++
+ XattrOperations *mapped_xattr_ops[] = {
+     &mapped_user_xattr,
+     &mapped_pacl_xattr,
+diff --git a/hw/9pfs/9p-xattr.h b/hw/9pfs/9p-xattr.h
+index a853ea6..0d83996 100644
+--- a/hw/9pfs/9p-xattr.h
++++ b/hw/9pfs/9p-xattr.h
+@@ -29,6 +29,13 @@ typedef struct xattr_operations
+                        const char *path, const char *name);
+ } XattrOperations;
+ 
++ssize_t local_getxattr_nofollow(FsContext *ctx, const char *path,
++                                const char *name, void *value, size_t size);
++ssize_t local_setxattr_nofollow(FsContext *ctx, const char *path,
++                                const char *name, void *value, size_t size,
++                                int flags);
++ssize_t local_removexattr_nofollow(FsContext *ctx, const char *path,
++                                   const char *name);
+ 
+ extern XattrOperations mapped_user_xattr;
+ extern XattrOperations passthrough_user_xattr;
+@@ -49,73 +56,21 @@ ssize_t v9fs_list_xattr(FsContext *ctx, const char *path, void *value,
+ int v9fs_set_xattr(FsContext *ctx, const char *path, const char *name,
+                           void *value, size_t size, int flags);
+ int v9fs_remove_xattr(FsContext *ctx, const char *path, const char *name);
++
+ ssize_t pt_listxattr(FsContext *ctx, const char *path, char *name, void *value,
+                      size_t size);
+-
+-static inline ssize_t pt_getxattr(FsContext *ctx, const char *path,
+-                                  const char *name, void *value, size_t size)
+-{
+-    char *buffer;
+-    ssize_t ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lgetxattr(buffer, name, value, size);
+-    g_free(buffer);
+-    return ret;
+-}
+-
+-static inline int pt_setxattr(FsContext *ctx, const char *path,
+-                              const char *name, void *value,
+-                              size_t size, int flags)
+-{
+-    char *buffer;
+-    int ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lsetxattr(buffer, name, value, size, flags);
+-    g_free(buffer);
+-    return ret;
+-}
+-
+-static inline int pt_removexattr(FsContext *ctx,
+-                                 const char *path, const char *name)
+-{
+-    char *buffer;
+-    int ret;
+-
+-    buffer = rpath(ctx, path);
+-    ret = lremovexattr(path, name);
+-    g_free(buffer);
+-    return ret;
+-}
+-
+-static inline ssize_t notsup_getxattr(FsContext *ctx, const char *path,
+-                                      const char *name, void *value,
+-                                      size_t size)
+-{
+-    errno = ENOTSUP;
+-    return -1;
+-}
+-
+-static inline int notsup_setxattr(FsContext *ctx, const char *path,
+-                                  const char *name, void *value,
+-                                  size_t size, int flags)
+-{
+-    errno = ENOTSUP;
+-    return -1;
+-}
+-
+-static inline ssize_t notsup_listxattr(FsContext *ctx, const char *path,
+-                                       char *name, void *value, size_t size)
+-{
+-    return 0;
+-}
+-
+-static inline int notsup_removexattr(FsContext *ctx,
+-                                     const char *path, const char *name)
+-{
+-    errno = ENOTSUP;
+-    return -1;
+-}
++ssize_t pt_getxattr(FsContext *ctx, const char *path, const char *name,
++                    void *value, size_t size);
++int pt_setxattr(FsContext *ctx, const char *path, const char *name, void *value,
++                size_t size, int flags);
++int pt_removexattr(FsContext *ctx, const char *path, const char *name);
++
++ssize_t notsup_getxattr(FsContext *ctx, const char *path, const char *name,
++                        void *value, size_t size);
++int notsup_setxattr(FsContext *ctx, const char *path, const char *name,
++                    void *value, size_t size, int flags);
++ssize_t notsup_listxattr(FsContext *ctx, const char *path, char *name,
++                         void *value, size_t size);
++int notsup_removexattr(FsContext *ctx, const char *path, const char *name);
+ 
+ #endif
+diff --git a/hw/9pfs/9p.c b/hw/9pfs/9p.c
+index faebd91..983a650 100644
+--- a/hw/9pfs/9p.c
++++ b/hw/9pfs/9p.c
+@@ -2337,7 +2337,7 @@ static void v9fs_flush(void *opaque)
+     ssize_t err;
+     int16_t tag;
+     size_t offset = 7;
+-    V9fsPDU *cancel_pdu;
++    V9fsPDU *cancel_pdu = NULL;
+     V9fsPDU *pdu = opaque;
+     V9fsState *s = pdu->s;
+ 
+@@ -2348,9 +2348,13 @@ static void v9fs_flush(void *opaque)
+     }
+     trace_v9fs_flush(pdu->tag, pdu->id, tag);
+ 
+-    QLIST_FOREACH(cancel_pdu, &s->active_list, next) {
+-        if (cancel_pdu->tag == tag) {
+-            break;
++    if (pdu->tag == tag) {
++        error_report("Warning: the guest sent a self-referencing 9P flush request");
++    } else {
++        QLIST_FOREACH(cancel_pdu, &s->active_list, next) {
++            if (cancel_pdu->tag == tag) {
++                break;
++            }
+         }
+     }
+     if (cancel_pdu) {
+@@ -3450,7 +3454,7 @@ int v9fs_device_realize_common(V9fsState *s, Error **errp)
+     /* initialize pdu allocator */
+     QLIST_INIT(&s->free_list);
+     QLIST_INIT(&s->active_list);
+-    for (i = 0; i < (MAX_REQ - 1); i++) {
++    for (i = 0; i < MAX_REQ; i++) {
+         QLIST_INSERT_HEAD(&s->free_list, &v->pdus[i], next);
+         v->pdus[i].s = s;
+         v->pdus[i].idx = i;
+@@ -3521,7 +3525,7 @@ int v9fs_device_realize_common(V9fsState *s, Error **errp)
+     rc = 0;
+ out:
+     if (rc) {
+-        if (s->ops->cleanup && s->ctx.private) {
++        if (s->ops && s->ops->cleanup && s->ctx.private) {
+             s->ops->cleanup(&s->ctx);
+         }
+         g_free(s->tag);
+diff --git a/hw/9pfs/Makefile.objs b/hw/9pfs/Makefile.objs
+index da0ae0c..32197e6 100644
+--- a/hw/9pfs/Makefile.objs
++++ b/hw/9pfs/Makefile.objs
+@@ -1,4 +1,4 @@
+-common-obj-y  = 9p.o
++common-obj-y  = 9p.o 9p-util.o
+ common-obj-y += 9p-local.o 9p-xattr.o
+ common-obj-y += 9p-xattr-user.o 9p-posix-acl.o
+ common-obj-y += coth.o cofs.o codir.o cofile.o
+diff --git a/hw/core/machine.c b/hw/core/machine.c
+index b0fd91f..213e8e0 100644
+--- a/hw/core/machine.c
++++ b/hw/core/machine.c
+@@ -554,11 +554,31 @@ static void machine_class_finalize(ObjectClass *klass, void *data)
+     g_free(mc->name);
+ }
+ 
++static void register_compat_prop(const char *driver,
++                                 const char *property,
++                                 const char *value)
++{
++    GlobalProperty *p = g_new0(GlobalProperty, 1);
++    /* Machine compat_props must never cause errors: */
++    p->errp = &error_abort;
++    p->driver = driver;
++    p->property = property;
++    p->value = value;
++    qdev_prop_register_global(p);
++}
++
++static void machine_register_compat_for_subclass(ObjectClass *oc, void *opaque)
++{
++    GlobalProperty *p = opaque;
++    register_compat_prop(object_class_get_name(oc), p->property, p->value);
++}
++
+ void machine_register_compat_props(MachineState *machine)
+ {
+     MachineClass *mc = MACHINE_GET_CLASS(machine);
+     int i;
+     GlobalProperty *p;
++    ObjectClass *oc;
+ 
+     if (!mc->compat_props) {
+         return;
+@@ -566,9 +586,22 @@ void machine_register_compat_props(MachineState *machine)
+ 
+     for (i = 0; i < mc->compat_props->len; i++) {
+         p = g_array_index(mc->compat_props, GlobalProperty *, i);
+-        /* Machine compat_props must never cause errors: */
+-        p->errp = &error_abort;
+-        qdev_prop_register_global(p);
++        oc = object_class_by_name(p->driver);
++        if (oc && object_class_is_abstract(oc)) {
++            /* temporary hack to make sure we do not override
++             * globals set explicitly on -global: if an abstract class
++             * is on compat_props, register globals for all its
++             * non-abstract subtypes instead.
++             *
++             * This doesn't solve the problem for cases where
++             * a non-abstract typename mentioned on compat_props
++             * has subclasses, like spapr-pci-host-bridge.
++             */
++            object_class_foreach(machine_register_compat_for_subclass,
++                                 p->driver, false, p);
++        } else {
++            register_compat_prop(p->driver, p->property, p->value);
++        }
+     }
+ }
+ 
+diff --git a/hw/display/cirrus_vga.c b/hw/display/cirrus_vga.c
+index bdb092e..9274c25 100644
+--- a/hw/display/cirrus_vga.c
++++ b/hw/display/cirrus_vga.c
+@@ -177,11 +177,12 @@
+ 
+ struct CirrusVGAState;
+ typedef void (*cirrus_bitblt_rop_t) (struct CirrusVGAState *s,
+-                                     uint8_t * dst, const uint8_t * src,
++                                     uint32_t dstaddr, uint32_t srcaddr,
+ 				     int dstpitch, int srcpitch,
+ 				     int bltwidth, int bltheight);
+ typedef void (*cirrus_fill_t)(struct CirrusVGAState *s,
+-                              uint8_t *dst, int dst_pitch, int width, int height);
++                              uint32_t dstaddr, int dst_pitch,
++                              int width, int height);
+ 
+ typedef struct CirrusVGAState {
+     VGACommonState vga;
+@@ -277,10 +278,9 @@ static bool blit_region_is_unsafe(struct CirrusVGAState *s,
+     }
+     if (pitch < 0) {
+         int64_t min = addr
+-            + ((int64_t)s->cirrus_blt_height-1) * pitch;
+-        int32_t max = addr
+-            + s->cirrus_blt_width;
+-        if (min < 0 || max > s->vga.vram_size) {
++            + ((int64_t)s->cirrus_blt_height - 1) * pitch
++            - s->cirrus_blt_width;
++        if (min < -1 || addr >= s->vga.vram_size) {
+             return true;
+         }
+     } else {
+@@ -294,7 +294,7 @@ static bool blit_region_is_unsafe(struct CirrusVGAState *s,
+     return false;
+ }
+ 
+-static bool blit_is_unsafe(struct CirrusVGAState *s)
++static bool blit_is_unsafe(struct CirrusVGAState *s, bool dst_only)
+ {
+     /* should be the case, see cirrus_bitblt_start */
+     assert(s->cirrus_blt_width > 0);
+@@ -305,11 +305,14 @@ static bool blit_is_unsafe(struct CirrusVGAState *s)
+     }
+ 
+     if (blit_region_is_unsafe(s, s->cirrus_blt_dstpitch,
+-                              s->cirrus_blt_dstaddr & s->cirrus_addr_mask)) {
++                              s->cirrus_blt_dstaddr)) {
+         return true;
+     }
++    if (dst_only) {
++        return false;
++    }
+     if (blit_region_is_unsafe(s, s->cirrus_blt_srcpitch,
+-                              s->cirrus_blt_srcaddr & s->cirrus_addr_mask)) {
++                              s->cirrus_blt_srcaddr)) {
+         return true;
+     }
+ 
+@@ -317,18 +320,57 @@ static bool blit_is_unsafe(struct CirrusVGAState *s)
+ }
+ 
+ static void cirrus_bitblt_rop_nop(CirrusVGAState *s,
+-                                  uint8_t *dst,const uint8_t *src,
++                                  uint32_t dstaddr, uint32_t srcaddr,
+                                   int dstpitch,int srcpitch,
+                                   int bltwidth,int bltheight)
+ {
+ }
+ 
+ static void cirrus_bitblt_fill_nop(CirrusVGAState *s,
+-                                   uint8_t *dst,
++                                   uint32_t dstaddr,
+                                    int dstpitch, int bltwidth,int bltheight)
+ {
+ }
+ 
++static inline uint8_t cirrus_src(CirrusVGAState *s, uint32_t srcaddr)
++{
++    if (s->cirrus_srccounter) {
++        /* cputovideo */
++        return s->cirrus_bltbuf[srcaddr & (CIRRUS_BLTBUFSIZE - 1)];
++    } else {
++        /* videotovideo */
++        return s->vga.vram_ptr[srcaddr & s->cirrus_addr_mask];
++    }
++}
++
++static inline uint16_t cirrus_src16(CirrusVGAState *s, uint32_t srcaddr)
++{
++    uint16_t *src;
++
++    if (s->cirrus_srccounter) {
++        /* cputovideo */
++        src = (void *)&s->cirrus_bltbuf[srcaddr & (CIRRUS_BLTBUFSIZE - 1) & ~1];
++    } else {
++        /* videotovideo */
++        src = (void *)&s->vga.vram_ptr[srcaddr & s->cirrus_addr_mask & ~1];
++    }
++    return *src;
++}
++
++static inline uint32_t cirrus_src32(CirrusVGAState *s, uint32_t srcaddr)
++{
++    uint32_t *src;
++
++    if (s->cirrus_srccounter) {
++        /* cputovideo */
++        src = (void *)&s->cirrus_bltbuf[srcaddr & (CIRRUS_BLTBUFSIZE - 1) & ~3];
++    } else {
++        /* videotovideo */
++        src = (void *)&s->vga.vram_ptr[srcaddr & s->cirrus_addr_mask & ~3];
++    }
++    return *src;
++}
++
+ #define ROP_NAME 0
+ #define ROP_FN(d, s) 0
+ #include "cirrus_vga_rop.h"
+@@ -658,25 +700,51 @@ static void cirrus_invalidate_region(CirrusVGAState * s, int off_begin,
+     int off_cur;
+     int off_cur_end;
+ 
++    if (off_pitch < 0) {
++        off_begin -= bytesperline - 1;
++    }
++
+     for (y = 0; y < lines; y++) {
+-	off_cur = off_begin;
+-	off_cur_end = (off_cur + bytesperline) & s->cirrus_addr_mask;
++        off_cur = off_begin;
++        off_cur_end = ((off_cur + bytesperline - 1) & s->cirrus_addr_mask) + 1;
++        assert(off_cur_end >= off_cur);
+         memory_region_set_dirty(&s->vga.vram, off_cur, off_cur_end - off_cur);
+-	off_begin += off_pitch;
++        off_begin += off_pitch;
+     }
+ }
+ 
+-static int cirrus_bitblt_common_patterncopy(CirrusVGAState * s,
+-					    const uint8_t * src)
++static int cirrus_bitblt_common_patterncopy(CirrusVGAState *s)
+ {
+-    uint8_t *dst;
++    uint32_t patternsize;
++    bool videosrc = !s->cirrus_srccounter;
+ 
+-    dst = s->vga.vram_ptr + (s->cirrus_blt_dstaddr & s->cirrus_addr_mask);
++    if (videosrc) {
++        switch (s->vga.get_bpp(&s->vga)) {
++        case 8:
++            patternsize = 64;
++            break;
++        case 15:
++        case 16:
++            patternsize = 128;
++            break;
++        case 24:
++        case 32:
++        default:
++            patternsize = 256;
++            break;
++        }
++        s->cirrus_blt_srcaddr &= ~(patternsize - 1);
++        if (s->cirrus_blt_srcaddr + patternsize > s->vga.vram_size) {
++            return 0;
++        }
++    }
+ 
+-    if (blit_is_unsafe(s))
++    if (blit_is_unsafe(s, true)) {
+         return 0;
++    }
+ 
+-    (*s->cirrus_rop) (s, dst, src,
++    (*s->cirrus_rop) (s, s->cirrus_blt_dstaddr,
++                      videosrc ? s->cirrus_blt_srcaddr : 0,
+                       s->cirrus_blt_dstpitch, 0,
+                       s->cirrus_blt_width, s->cirrus_blt_height);
+     cirrus_invalidate_region(s, s->cirrus_blt_dstaddr,
+@@ -691,11 +759,11 @@ static int cirrus_bitblt_solidfill(CirrusVGAState *s, int blt_rop)
+ {
+     cirrus_fill_t rop_func;
+ 
+-    if (blit_is_unsafe(s)) {
++    if (blit_is_unsafe(s, true)) {
+         return 0;
+     }
+     rop_func = cirrus_fill[rop_to_index[blt_rop]][s->cirrus_blt_pixelwidth - 1];
+-    rop_func(s, s->vga.vram_ptr + (s->cirrus_blt_dstaddr & s->cirrus_addr_mask),
++    rop_func(s, s->cirrus_blt_dstaddr,
+              s->cirrus_blt_dstpitch,
+              s->cirrus_blt_width, s->cirrus_blt_height);
+     cirrus_invalidate_region(s, s->cirrus_blt_dstaddr,
+@@ -713,9 +781,7 @@ static int cirrus_bitblt_solidfill(CirrusVGAState *s, int blt_rop)
+ 
+ static int cirrus_bitblt_videotovideo_patterncopy(CirrusVGAState * s)
+ {
+-    return cirrus_bitblt_common_patterncopy(s,
+-					    s->vga.vram_ptr + ((s->cirrus_blt_srcaddr & ~7) &
+-                                            s->cirrus_addr_mask));
++    return cirrus_bitblt_common_patterncopy(s);
+ }
+ 
+ static int cirrus_do_copy(CirrusVGAState *s, int dst, int src, int w, int h)
+@@ -764,23 +830,15 @@ static int cirrus_do_copy(CirrusVGAState *s, int dst, int src, int w, int h)
+         }
+     }
+ 
+-    /* we have to flush all pending changes so that the copy
+-       is generated at the appropriate moment in time */
+-    if (notify)
+-        graphic_hw_update(s->vga.con);
+-
+-    (*s->cirrus_rop) (s, s->vga.vram_ptr +
+-		      (s->cirrus_blt_dstaddr & s->cirrus_addr_mask),
+-		      s->vga.vram_ptr +
+-		      (s->cirrus_blt_srcaddr & s->cirrus_addr_mask),
++    (*s->cirrus_rop) (s, s->cirrus_blt_dstaddr,
++                      s->cirrus_blt_srcaddr,
+ 		      s->cirrus_blt_dstpitch, s->cirrus_blt_srcpitch,
+ 		      s->cirrus_blt_width, s->cirrus_blt_height);
+ 
+     if (notify) {
+-        qemu_console_copy(s->vga.con,
+-			  sx, sy, dx, dy,
+-			  s->cirrus_blt_width / depth,
+-			  s->cirrus_blt_height);
++        dpy_gfx_update(s->vga.con, dx, dy,
++                       s->cirrus_blt_width / depth,
++                       s->cirrus_blt_height);
+     }
+ 
+     /* we don't have to notify the display that this portion has
+@@ -795,7 +853,7 @@ static int cirrus_do_copy(CirrusVGAState *s, int dst, int src, int w, int h)
+ 
+ static int cirrus_bitblt_videotovideo_copy(CirrusVGAState * s)
+ {
+-    if (blit_is_unsafe(s))
++    if (blit_is_unsafe(s, false))
+         return 0;
+ 
+     return cirrus_do_copy(s, s->cirrus_blt_dstaddr - s->vga.start_addr,
+@@ -816,16 +874,15 @@ static void cirrus_bitblt_cputovideo_next(CirrusVGAState * s)
+ 
+     if (s->cirrus_srccounter > 0) {
+         if (s->cirrus_blt_mode & CIRRUS_BLTMODE_PATTERNCOPY) {
+-            cirrus_bitblt_common_patterncopy(s, s->cirrus_bltbuf);
++            cirrus_bitblt_common_patterncopy(s);
+         the_end:
+             s->cirrus_srccounter = 0;
+             cirrus_bitblt_reset(s);
+         } else {
+             /* at least one scan line */
+             do {
+-                (*s->cirrus_rop)(s, s->vga.vram_ptr +
+-                                 (s->cirrus_blt_dstaddr & s->cirrus_addr_mask),
+-                                  s->cirrus_bltbuf, 0, 0, s->cirrus_blt_width, 1);
++                (*s->cirrus_rop)(s, s->cirrus_blt_dstaddr,
++                                 0, 0, 0, s->cirrus_blt_width, 1);
+                 cirrus_invalidate_region(s, s->cirrus_blt_dstaddr, 0,
+                                          s->cirrus_blt_width, 1);
+                 s->cirrus_blt_dstaddr += s->cirrus_blt_dstpitch;
+@@ -871,6 +928,10 @@ static int cirrus_bitblt_cputovideo(CirrusVGAState * s)
+ {
+     int w;
+ 
++    if (blit_is_unsafe(s, true)) {
++        return 0;
++    }
++
+     s->cirrus_blt_mode &= ~CIRRUS_BLTMODE_MEMSYSSRC;
+     s->cirrus_srcptr = &s->cirrus_bltbuf[0];
+     s->cirrus_srcptr_end = &s->cirrus_bltbuf[0];
+@@ -896,6 +957,10 @@ static int cirrus_bitblt_cputovideo(CirrusVGAState * s)
+ 	}
+         s->cirrus_srccounter = s->cirrus_blt_srcpitch * s->cirrus_blt_height;
+     }
++
++    /* the blit_is_unsafe call above should catch this */
++    assert(s->cirrus_blt_srcpitch <= CIRRUS_BLTBUFSIZE);
++
+     s->cirrus_srcptr = s->cirrus_bltbuf;
+     s->cirrus_srcptr_end = s->cirrus_bltbuf + s->cirrus_blt_srcpitch;
+     cirrus_update_memory_access(s);
+@@ -943,6 +1008,9 @@ static void cirrus_bitblt_start(CirrusVGAState * s)
+     s->cirrus_blt_modeext = s->vga.gr[0x33];
+     blt_rop = s->vga.gr[0x32];
+ 
++    s->cirrus_blt_dstaddr &= s->cirrus_addr_mask;
++    s->cirrus_blt_srcaddr &= s->cirrus_addr_mask;
++
+ #ifdef DEBUG_BITBLT
+     printf("rop=0x%02x mode=0x%02x modeext=0x%02x w=%d h=%d dpitch=%d spitch=%d daddr=0x%08x saddr=0x%08x writemask=0x%02x\n",
+            blt_rop,
+diff --git a/hw/display/cirrus_vga_rop.h b/hw/display/cirrus_vga_rop.h
+index 0925a00..0841b9e 100644
+--- a/hw/display/cirrus_vga_rop.h
++++ b/hw/display/cirrus_vga_rop.h
+@@ -22,31 +22,65 @@
+  * THE SOFTWARE.
+  */
+ 
+-static inline void glue(rop_8_,ROP_NAME)(uint8_t *dst, uint8_t src)
++static inline void glue(rop_8_, ROP_NAME)(CirrusVGAState *s,
++                                          uint32_t dstaddr, uint8_t src)
+ {
++    uint8_t *dst = &s->vga.vram_ptr[dstaddr & s->cirrus_addr_mask];
+     *dst = ROP_FN(*dst, src);
+ }
+ 
+-static inline void glue(rop_16_,ROP_NAME)(uint16_t *dst, uint16_t src)
++static inline void glue(rop_tr_8_, ROP_NAME)(CirrusVGAState *s,
++                                             uint32_t dstaddr, uint8_t src,
++                                             uint8_t transp)
+ {
++    uint8_t *dst = &s->vga.vram_ptr[dstaddr & s->cirrus_addr_mask];
++    uint8_t pixel = ROP_FN(*dst, src);
++    if (pixel != transp) {
++        *dst = pixel;
++    }
++}
++
++static inline void glue(rop_16_, ROP_NAME)(CirrusVGAState *s,
++                                           uint32_t dstaddr, uint16_t src)
++{
++    uint16_t *dst = (uint16_t *)
++        (&s->vga.vram_ptr[dstaddr & s->cirrus_addr_mask & ~1]);
+     *dst = ROP_FN(*dst, src);
+ }
+ 
+-static inline void glue(rop_32_,ROP_NAME)(uint32_t *dst, uint32_t src)
++static inline void glue(rop_tr_16_, ROP_NAME)(CirrusVGAState *s,
++                                              uint32_t dstaddr, uint16_t src,
++                                              uint16_t transp)
+ {
++    uint16_t *dst = (uint16_t *)
++        (&s->vga.vram_ptr[dstaddr & s->cirrus_addr_mask & ~1]);
++    uint16_t pixel = ROP_FN(*dst, src);
++    if (pixel != transp) {
++        *dst = pixel;
++    }
++}
++
++static inline void glue(rop_32_, ROP_NAME)(CirrusVGAState *s,
++                                           uint32_t dstaddr, uint32_t src)
++{
++    uint32_t *dst = (uint32_t *)
++        (&s->vga.vram_ptr[dstaddr & s->cirrus_addr_mask & ~3]);
+     *dst = ROP_FN(*dst, src);
+ }
+ 
+-#define ROP_OP(d, s) glue(rop_8_,ROP_NAME)(d, s)
+-#define ROP_OP_16(d, s) glue(rop_16_,ROP_NAME)(d, s)
+-#define ROP_OP_32(d, s) glue(rop_32_,ROP_NAME)(d, s)
++#define ROP_OP(st, d, s)           glue(rop_8_, ROP_NAME)(st, d, s)
++#define ROP_OP_TR(st, d, s, t)     glue(rop_tr_8_, ROP_NAME)(st, d, s, t)
++#define ROP_OP_16(st, d, s)        glue(rop_16_, ROP_NAME)(st, d, s)
++#define ROP_OP_TR_16(st, d, s, t)  glue(rop_tr_16_, ROP_NAME)(st, d, s, t)
++#define ROP_OP_32(st, d, s)        glue(rop_32_, ROP_NAME)(st, d, s)
+ #undef ROP_FN
+ 
+ static void
+ glue(cirrus_bitblt_rop_fwd_, ROP_NAME)(CirrusVGAState *s,
+-                             uint8_t *dst,const uint8_t *src,
+-                             int dstpitch,int srcpitch,
+-                             int bltwidth,int bltheight)
++                                       uint32_t dstaddr,
++                                       uint32_t srcaddr,
++                                       int dstpitch, int srcpitch,
++                                       int bltwidth, int bltheight)
+ {
+     int x,y;
+     dstpitch -= bltwidth;
+@@ -58,134 +92,139 @@ glue(cirrus_bitblt_rop_fwd_, ROP_NAME)(CirrusVGAState *s,
+ 
+     for (y = 0; y < bltheight; y++) {
+         for (x = 0; x < bltwidth; x++) {
+-            ROP_OP(dst, *src);
+-            dst++;
+-            src++;
++            ROP_OP(s, dstaddr, cirrus_src(s, srcaddr));
++            dstaddr++;
++            srcaddr++;
+         }
+-        dst += dstpitch;
+-        src += srcpitch;
++        dstaddr += dstpitch;
++        srcaddr += srcpitch;
+     }
+ }
+ 
+ static void
+ glue(cirrus_bitblt_rop_bkwd_, ROP_NAME)(CirrusVGAState *s,
+-                                        uint8_t *dst,const uint8_t *src,
+-                                        int dstpitch,int srcpitch,
+-                                        int bltwidth,int bltheight)
++                                        uint32_t dstaddr,
++                                        uint32_t srcaddr,
++                                        int dstpitch, int srcpitch,
++                                        int bltwidth, int bltheight)
+ {
+     int x,y;
+     dstpitch += bltwidth;
+     srcpitch += bltwidth;
+     for (y = 0; y < bltheight; y++) {
+         for (x = 0; x < bltwidth; x++) {
+-            ROP_OP(dst, *src);
+-            dst--;
+-            src--;
++            ROP_OP(s, dstaddr, cirrus_src(s, srcaddr));
++            dstaddr--;
++            srcaddr--;
+         }
+-        dst += dstpitch;
+-        src += srcpitch;
++        dstaddr += dstpitch;
++        srcaddr += srcpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(cirrus_bitblt_rop_fwd_transp_, ROP_NAME),_8)(CirrusVGAState *s,
+-						       uint8_t *dst,const uint8_t *src,
+-						       int dstpitch,int srcpitch,
+-						       int bltwidth,int bltheight)
++                                                       uint32_t dstaddr,
++                                                       uint32_t srcaddr,
++                                                       int dstpitch,
++                                                       int srcpitch,
++                                                       int bltwidth,
++                                                       int bltheight)
+ {
+     int x,y;
+-    uint8_t p;
++    uint8_t transp = s->vga.gr[0x34];
+     dstpitch -= bltwidth;
+     srcpitch -= bltwidth;
++
++    if (bltheight > 1 && (dstpitch < 0 || srcpitch < 0)) {
++        return;
++    }
++
+     for (y = 0; y < bltheight; y++) {
+         for (x = 0; x < bltwidth; x++) {
+-	    p = *dst;
+-            ROP_OP(&p, *src);
+-	    if (p != s->vga.gr[0x34]) *dst = p;
+-            dst++;
+-            src++;
++            ROP_OP_TR(s, dstaddr, cirrus_src(s, srcaddr), transp);
++            dstaddr++;
++            srcaddr++;
+         }
+-        dst += dstpitch;
+-        src += srcpitch;
++        dstaddr += dstpitch;
++        srcaddr += srcpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(cirrus_bitblt_rop_bkwd_transp_, ROP_NAME),_8)(CirrusVGAState *s,
+-							uint8_t *dst,const uint8_t *src,
+-							int dstpitch,int srcpitch,
+-							int bltwidth,int bltheight)
++                                                        uint32_t dstaddr,
++                                                        uint32_t srcaddr,
++                                                        int dstpitch,
++                                                        int srcpitch,
++                                                        int bltwidth,
++                                                        int bltheight)
+ {
+     int x,y;
+-    uint8_t p;
++    uint8_t transp = s->vga.gr[0x34];
+     dstpitch += bltwidth;
+     srcpitch += bltwidth;
+     for (y = 0; y < bltheight; y++) {
+         for (x = 0; x < bltwidth; x++) {
+-	    p = *dst;
+-            ROP_OP(&p, *src);
+-	    if (p != s->vga.gr[0x34]) *dst = p;
+-            dst--;
+-            src--;
++            ROP_OP_TR(s, dstaddr, cirrus_src(s, srcaddr), transp);
++            dstaddr--;
++            srcaddr--;
+         }
+-        dst += dstpitch;
+-        src += srcpitch;
++        dstaddr += dstpitch;
++        srcaddr += srcpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(cirrus_bitblt_rop_fwd_transp_, ROP_NAME),_16)(CirrusVGAState *s,
+-							uint8_t *dst,const uint8_t *src,
+-							int dstpitch,int srcpitch,
+-							int bltwidth,int bltheight)
++                                                        uint32_t dstaddr,
++                                                        uint32_t srcaddr,
++                                                        int dstpitch,
++                                                        int srcpitch,
++                                                        int bltwidth,
++                                                        int bltheight)
+ {
+     int x,y;
+-    uint8_t p1, p2;
++    uint16_t transp = s->vga.gr[0x34] | (uint16_t)s->vga.gr[0x35] << 8;
+     dstpitch -= bltwidth;
+     srcpitch -= bltwidth;
++
++    if (bltheight > 1 && (dstpitch < 0 || srcpitch < 0)) {
++        return;
++    }
++
+     for (y = 0; y < bltheight; y++) {
+         for (x = 0; x < bltwidth; x+=2) {
+-	    p1 = *dst;
+-	    p2 = *(dst+1);
+-            ROP_OP(&p1, *src);
+-            ROP_OP(&p2, *(src + 1));
+-	    if ((p1 != s->vga.gr[0x34]) || (p2 != s->vga.gr[0x35])) {
+-		*dst = p1;
+-		*(dst+1) = p2;
+-	    }
+-            dst+=2;
+-            src+=2;
++            ROP_OP_TR_16(s, dstaddr, cirrus_src16(s, srcaddr), transp);
++            dstaddr += 2;
++            srcaddr += 2;
+         }
+-        dst += dstpitch;
+-        src += srcpitch;
++        dstaddr += dstpitch;
++        srcaddr += srcpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(cirrus_bitblt_rop_bkwd_transp_, ROP_NAME),_16)(CirrusVGAState *s,
+-							 uint8_t *dst,const uint8_t *src,
+-							 int dstpitch,int srcpitch,
+-							 int bltwidth,int bltheight)
++                                                         uint32_t dstaddr,
++                                                         uint32_t srcaddr,
++                                                         int dstpitch,
++                                                         int srcpitch,
++                                                         int bltwidth,
++                                                         int bltheight)
+ {
+     int x,y;
+-    uint8_t p1, p2;
++    uint16_t transp = s->vga.gr[0x34] | (uint16_t)s->vga.gr[0x35] << 8;
+     dstpitch += bltwidth;
+     srcpitch += bltwidth;
+     for (y = 0; y < bltheight; y++) {
+         for (x = 0; x < bltwidth; x+=2) {
+-	    p1 = *(dst-1);
+-	    p2 = *dst;
+-            ROP_OP(&p1, *(src - 1));
+-            ROP_OP(&p2, *src);
+-	    if ((p1 != s->vga.gr[0x34]) || (p2 != s->vga.gr[0x35])) {
+-		*(dst-1) = p1;
+-		*dst = p2;
+-	    }
+-            dst-=2;
+-            src-=2;
++            ROP_OP_TR_16(s, dstaddr - 1, cirrus_src16(s, srcaddr - 1), transp);
++            dstaddr -= 2;
++            srcaddr -= 2;
+         }
+-        dst += dstpitch;
+-        src += srcpitch;
++        dstaddr += dstpitch;
++        srcaddr += srcpitch;
+     }
+ }
+ 
+diff --git a/hw/display/cirrus_vga_rop2.h b/hw/display/cirrus_vga_rop2.h
+index d28bcc6..b86bcd6 100644
+--- a/hw/display/cirrus_vga_rop2.h
++++ b/hw/display/cirrus_vga_rop2.h
+@@ -23,30 +23,32 @@
+  */
+ 
+ #if DEPTH == 8
+-#define PUTPIXEL()    ROP_OP(&d[0], col)
++#define PUTPIXEL(s, a, c)    ROP_OP(s, a, c)
+ #elif DEPTH == 16
+-#define PUTPIXEL()    ROP_OP_16((uint16_t *)&d[0], col)
++#define PUTPIXEL(s, a, c)    ROP_OP_16(s, a, c)
+ #elif DEPTH == 24
+-#define PUTPIXEL()    ROP_OP(&d[0], col);        \
+-                      ROP_OP(&d[1], (col >> 8)); \
+-                      ROP_OP(&d[2], (col >> 16))
++#define PUTPIXEL(s, a, c)    do {          \
++        ROP_OP(s, a,     c);               \
++        ROP_OP(s, a + 1, (col >> 8));      \
++        ROP_OP(s, a + 2, (col >> 16));     \
++    } while (0)
+ #elif DEPTH == 32
+-#define PUTPIXEL()    ROP_OP_32(((uint32_t *)&d[0]), col)
++#define PUTPIXEL(s, a, c)    ROP_OP_32(s, a, c)
+ #else
+ #error unsupported DEPTH
+ #endif
+ 
+ static void
+ glue(glue(glue(cirrus_patternfill_, ROP_NAME), _),DEPTH)
+-     (CirrusVGAState * s, uint8_t * dst,
+-      const uint8_t * src,
++     (CirrusVGAState *s, uint32_t dstaddr,
++      uint32_t srcaddr,
+       int dstpitch, int srcpitch,
+       int bltwidth, int bltheight)
+ {
+-    uint8_t *d;
++    uint32_t addr;
+     int x, y, pattern_y, pattern_pitch, pattern_x;
+     unsigned int col;
+-    const uint8_t *src1;
++    uint32_t src1addr;
+ #if DEPTH == 24
+     int skipleft = s->vga.gr[0x2f] & 0x1f;
+ #else
+@@ -63,42 +65,44 @@ glue(glue(glue(cirrus_patternfill_, ROP_NAME), _),DEPTH)
+     pattern_y = s->cirrus_blt_srcaddr & 7;
+     for(y = 0; y < bltheight; y++) {
+         pattern_x = skipleft;
+-        d = dst + skipleft;
+-        src1 = src + pattern_y * pattern_pitch;
++        addr = dstaddr + skipleft;
++        src1addr = srcaddr + pattern_y * pattern_pitch;
+         for (x = skipleft; x < bltwidth; x += (DEPTH / 8)) {
+ #if DEPTH == 8
+-            col = src1[pattern_x];
++            col = cirrus_src(s, src1addr + pattern_x);
+             pattern_x = (pattern_x + 1) & 7;
+ #elif DEPTH == 16
+-            col = ((uint16_t *)(src1 + pattern_x))[0];
++            col = cirrus_src16(s, src1addr + pattern_x);
+             pattern_x = (pattern_x + 2) & 15;
+ #elif DEPTH == 24
+             {
+-                const uint8_t *src2 = src1 + pattern_x * 3;
+-                col = src2[0] | (src2[1] << 8) | (src2[2] << 16);
++                uint32_t src2addr = src1addr + pattern_x * 3;
++                col = cirrus_src(s, src2addr) |
++                    (cirrus_src(s, src2addr + 1) << 8) |
++                    (cirrus_src(s, src2addr + 2) << 16);
+                 pattern_x = (pattern_x + 1) & 7;
+             }
+ #else
+-            col = ((uint32_t *)(src1 + pattern_x))[0];
++            col = cirrus_src32(s, src1addr + pattern_x);
+             pattern_x = (pattern_x + 4) & 31;
+ #endif
+-            PUTPIXEL();
+-            d += (DEPTH / 8);
++            PUTPIXEL(s, addr, col);
++            addr += (DEPTH / 8);
+         }
+         pattern_y = (pattern_y + 1) & 7;
+-        dst += dstpitch;
++        dstaddr += dstpitch;
+     }
+ }
+ 
+ /* NOTE: srcpitch is ignored */
+ static void
+ glue(glue(glue(cirrus_colorexpand_transp_, ROP_NAME), _),DEPTH)
+-     (CirrusVGAState * s, uint8_t * dst,
+-      const uint8_t * src,
++     (CirrusVGAState *s, uint32_t dstaddr,
++      uint32_t srcaddr,
+       int dstpitch, int srcpitch,
+       int bltwidth, int bltheight)
+ {
+-    uint8_t *d;
++    uint32_t addr;
+     int x, y;
+     unsigned bits, bits_xor;
+     unsigned int col;
+@@ -122,33 +126,33 @@ glue(glue(glue(cirrus_colorexpand_transp_, ROP_NAME), _),DEPTH)
+ 
+     for(y = 0; y < bltheight; y++) {
+         bitmask = 0x80 >> srcskipleft;
+-        bits = *src++ ^ bits_xor;
+-        d = dst + dstskipleft;
++        bits = cirrus_src(s, srcaddr++) ^ bits_xor;
++        addr = dstaddr + dstskipleft;
+         for (x = dstskipleft; x < bltwidth; x += (DEPTH / 8)) {
+             if ((bitmask & 0xff) == 0) {
+                 bitmask = 0x80;
+-                bits = *src++ ^ bits_xor;
++                bits = cirrus_src(s, srcaddr++) ^ bits_xor;
+             }
+             index = (bits & bitmask);
+             if (index) {
+-                PUTPIXEL();
++                PUTPIXEL(s, addr, col);
+             }
+-            d += (DEPTH / 8);
++            addr += (DEPTH / 8);
+             bitmask >>= 1;
+         }
+-        dst += dstpitch;
++        dstaddr += dstpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(glue(cirrus_colorexpand_, ROP_NAME), _),DEPTH)
+-     (CirrusVGAState * s, uint8_t * dst,
+-      const uint8_t * src,
++     (CirrusVGAState *s, uint32_t dstaddr,
++      uint32_t srcaddr,
+       int dstpitch, int srcpitch,
+       int bltwidth, int bltheight)
+ {
+     uint32_t colors[2];
+-    uint8_t *d;
++    uint32_t addr;
+     int x, y;
+     unsigned bits;
+     unsigned int col;
+@@ -160,30 +164,30 @@ glue(glue(glue(cirrus_colorexpand_, ROP_NAME), _),DEPTH)
+     colors[1] = s->cirrus_blt_fgcol;
+     for(y = 0; y < bltheight; y++) {
+         bitmask = 0x80 >> srcskipleft;
+-        bits = *src++;
+-        d = dst + dstskipleft;
++        bits = cirrus_src(s, srcaddr++);
++        addr = dstaddr + dstskipleft;
+         for (x = dstskipleft; x < bltwidth; x += (DEPTH / 8)) {
+             if ((bitmask & 0xff) == 0) {
+                 bitmask = 0x80;
+-                bits = *src++;
++                bits = cirrus_src(s, srcaddr++);
+             }
+             col = colors[!!(bits & bitmask)];
+-            PUTPIXEL();
+-            d += (DEPTH / 8);
++            PUTPIXEL(s, addr, col);
++            addr += (DEPTH / 8);
+             bitmask >>= 1;
+         }
+-        dst += dstpitch;
++        dstaddr += dstpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(glue(cirrus_colorexpand_pattern_transp_, ROP_NAME), _),DEPTH)
+-     (CirrusVGAState * s, uint8_t * dst,
+-      const uint8_t * src,
++     (CirrusVGAState *s, uint32_t dstaddr,
++      uint32_t srcaddr,
+       int dstpitch, int srcpitch,
+       int bltwidth, int bltheight)
+ {
+-    uint8_t *d;
++    uint32_t addr;
+     int x, y, bitpos, pattern_y;
+     unsigned int bits, bits_xor;
+     unsigned int col;
+@@ -205,30 +209,30 @@ glue(glue(glue(cirrus_colorexpand_pattern_transp_, ROP_NAME), _),DEPTH)
+     pattern_y = s->cirrus_blt_srcaddr & 7;
+ 
+     for(y = 0; y < bltheight; y++) {
+-        bits = src[pattern_y] ^ bits_xor;
++        bits = cirrus_src(s, srcaddr + pattern_y) ^ bits_xor;
+         bitpos = 7 - srcskipleft;
+-        d = dst + dstskipleft;
++        addr = dstaddr + dstskipleft;
+         for (x = dstskipleft; x < bltwidth; x += (DEPTH / 8)) {
+             if ((bits >> bitpos) & 1) {
+-                PUTPIXEL();
++                PUTPIXEL(s, addr, col);
+             }
+-            d += (DEPTH / 8);
++            addr += (DEPTH / 8);
+             bitpos = (bitpos - 1) & 7;
+         }
+         pattern_y = (pattern_y + 1) & 7;
+-        dst += dstpitch;
++        dstaddr += dstpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(glue(cirrus_colorexpand_pattern_, ROP_NAME), _),DEPTH)
+-     (CirrusVGAState * s, uint8_t * dst,
+-      const uint8_t * src,
++     (CirrusVGAState *s, uint32_t dstaddr,
++      uint32_t srcaddr,
+       int dstpitch, int srcpitch,
+       int bltwidth, int bltheight)
+ {
+     uint32_t colors[2];
+-    uint8_t *d;
++    uint32_t addr;
+     int x, y, bitpos, pattern_y;
+     unsigned int bits;
+     unsigned int col;
+@@ -240,40 +244,39 @@ glue(glue(glue(cirrus_colorexpand_pattern_, ROP_NAME), _),DEPTH)
+     pattern_y = s->cirrus_blt_srcaddr & 7;
+ 
+     for(y = 0; y < bltheight; y++) {
+-        bits = src[pattern_y];
++        bits = cirrus_src(s, srcaddr + pattern_y);
+         bitpos = 7 - srcskipleft;
+-        d = dst + dstskipleft;
++        addr = dstaddr + dstskipleft;
+         for (x = dstskipleft; x < bltwidth; x += (DEPTH / 8)) {
+             col = colors[(bits >> bitpos) & 1];
+-            PUTPIXEL();
+-            d += (DEPTH / 8);
++            PUTPIXEL(s, addr, col);
++            addr += (DEPTH / 8);
+             bitpos = (bitpos - 1) & 7;
+         }
+         pattern_y = (pattern_y + 1) & 7;
+-        dst += dstpitch;
++        dstaddr += dstpitch;
+     }
+ }
+ 
+ static void
+ glue(glue(glue(cirrus_fill_, ROP_NAME), _),DEPTH)
+      (CirrusVGAState *s,
+-      uint8_t *dst, int dst_pitch,
++      uint32_t dstaddr, int dst_pitch,
+       int width, int height)
+ {
+-    uint8_t *d, *d1;
++    uint32_t addr;
+     uint32_t col;
+     int x, y;
+ 
+     col = s->cirrus_blt_fgcol;
+ 
+-    d1 = dst;
+     for(y = 0; y < height; y++) {
+-        d = d1;
++        addr = dstaddr;
+         for(x = 0; x < width; x += (DEPTH / 8)) {
+-            PUTPIXEL();
+-            d += (DEPTH / 8);
++            PUTPIXEL(s, addr, col);
++            addr += (DEPTH / 8);
+         }
+-        d1 += dst_pitch;
++        dstaddr += dst_pitch;
+     }
+ }
+ 
+diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+index a9e64a8..02cc5a2 100644
+--- a/hw/i386/pc.c
++++ b/hw/i386/pc.c
+@@ -1818,8 +1818,10 @@ static void pc_cpu_plug(HotplugHandler *hotplug_dev,
+ 
+     /* increment the number of CPUs */
+     pcms->boot_cpus++;
+-    if (dev->hotplugged) {
++    if (pcms->rtc) {
+         rtc_set_cpus_count(pcms->rtc, pcms->boot_cpus);
++    }
++    if (pcms->fw_cfg) {
+         fw_cfg_modify_i16(pcms->fw_cfg, FW_CFG_NB_CPUS, pcms->boot_cpus);
+     }
+ 
+diff --git a/hw/ide/ahci.c b/hw/ide/ahci.c
+index 3c19bda..6a17acf 100644
+--- a/hw/ide/ahci.c
++++ b/hw/ide/ahci.c
+@@ -488,7 +488,7 @@ static void ahci_reg_init(AHCIState *s)
+     s->control_regs.cap = (s->ports - 1) |
+                           (AHCI_NUM_COMMAND_SLOTS << 8) |
+                           (AHCI_SUPPORTED_SPEED_GEN1 << AHCI_SUPPORTED_SPEED) |
+-                          HOST_CAP_NCQ | HOST_CAP_AHCI;
++                          HOST_CAP_NCQ | HOST_CAP_AHCI | HOST_CAP_64;
+ 
+     s->control_regs.impl = (1 << s->ports) - 1;
+ 
+diff --git a/hw/intc/apic_common.c b/hw/intc/apic_common.c
+index d78c885..7dfcca4 100644
+--- a/hw/intc/apic_common.c
++++ b/hw/intc/apic_common.c
+@@ -250,6 +250,8 @@ static void apic_reset_common(DeviceState *dev)
+     s->apicbase = APIC_DEFAULT_ADDRESS | bsp | MSR_IA32_APICBASE_ENABLE;
+     s->id = s->initial_apic_id;
+ 
++    apic_reset_irq_delivered();
++
+     s->vapic_paddr = 0;
+     info->vapic_base_update(s);
+ 
+diff --git a/hw/intc/ioapic.c b/hw/intc/ioapic.c
+index fd9208f..5fa8481 100644
+--- a/hw/intc/ioapic.c
++++ b/hw/intc/ioapic.c
+@@ -426,6 +426,11 @@ static void ioapic_class_init(ObjectClass *klass, void *data)
+     DeviceClass *dc = DEVICE_CLASS(klass);
+ 
+     k->realize = ioapic_realize;
++    /*
++     * If APIC is in kernel, we need to update the kernel cache after
++     * migration, otherwise first 24 gsi routes will be invalid.
++     */
++    k->post_load = ioapic_update_kvm_routes;
+     dc->reset = ioapic_reset_common;
+     dc->props = ioapic_properties;
+ }
+diff --git a/hw/net/e1000e.c b/hw/net/e1000e.c
+index 4994e1c..509f2a0 100644
+--- a/hw/net/e1000e.c
++++ b/hw/net/e1000e.c
+@@ -306,7 +306,7 @@ e1000e_init_msix(E1000EState *s)
+ static void
+ e1000e_cleanup_msix(E1000EState *s)
+ {
+-    if (msix_enabled(PCI_DEVICE(s))) {
++    if (msix_present(PCI_DEVICE(s))) {
+         e1000e_unuse_msix_vectors(s, E1000E_MSIX_VEC_NUM);
+         msix_uninit(PCI_DEVICE(s), &s->msix, &s->msix);
+     }
+diff --git a/hw/net/net_rx_pkt.c b/hw/net/net_rx_pkt.c
+index 1019b50..c7ae33d 100644
+--- a/hw/net/net_rx_pkt.c
++++ b/hw/net/net_rx_pkt.c
+@@ -23,13 +23,13 @@
+ 
+ struct NetRxPkt {
+     struct virtio_net_hdr virt_hdr;
+-    uint8_t ehdr_buf[sizeof(struct eth_header)];
++    uint8_t ehdr_buf[sizeof(struct eth_header) + sizeof(struct vlan_header)];
+     struct iovec *vec;
+     uint16_t vec_len_total;
+     uint16_t vec_len;
+     uint32_t tot_len;
+     uint16_t tci;
+-    bool vlan_stripped;
++    size_t ehdr_buf_len;
+     bool has_virt_hdr;
+     eth_pkt_types_e packet_type;
+ 
+@@ -88,17 +88,16 @@ net_rx_pkt_pull_data(struct NetRxPkt *pkt,
+                         const struct iovec *iov, int iovcnt,
+                         size_t ploff)
+ {
+-    if (pkt->vlan_stripped) {
++    if (pkt->ehdr_buf_len) {
+         net_rx_pkt_iovec_realloc(pkt, iovcnt + 1);
+ 
+         pkt->vec[0].iov_base = pkt->ehdr_buf;
+-        pkt->vec[0].iov_len = sizeof(pkt->ehdr_buf);
+-
+-        pkt->tot_len =
+-            iov_size(iov, iovcnt) - ploff + sizeof(struct eth_header);
++        pkt->vec[0].iov_len = pkt->ehdr_buf_len;
+ 
++        pkt->tot_len = iov_size(iov, iovcnt) - ploff + pkt->ehdr_buf_len;
+         pkt->vec_len = iov_copy(pkt->vec + 1, pkt->vec_len_total - 1,
+-                                iov, iovcnt, ploff, pkt->tot_len);
++                                iov, iovcnt, ploff,
++                                pkt->tot_len - pkt->ehdr_buf_len) + 1;
+     } else {
+         net_rx_pkt_iovec_realloc(pkt, iovcnt);
+ 
+@@ -123,11 +122,12 @@ void net_rx_pkt_attach_iovec(struct NetRxPkt *pkt,
+     uint16_t tci = 0;
+     uint16_t ploff = iovoff;
+     assert(pkt);
+-    pkt->vlan_stripped = false;
+ 
+     if (strip_vlan) {
+-        pkt->vlan_stripped = eth_strip_vlan(iov, iovcnt, iovoff, pkt->ehdr_buf,
+-                                            &ploff, &tci);
++        pkt->ehdr_buf_len = eth_strip_vlan(iov, iovcnt, iovoff, pkt->ehdr_buf,
++                                           &ploff, &tci);
++    } else {
++        pkt->ehdr_buf_len = 0;
+     }
+ 
+     pkt->tci = tci;
+@@ -143,12 +143,13 @@ void net_rx_pkt_attach_iovec_ex(struct NetRxPkt *pkt,
+     uint16_t tci = 0;
+     uint16_t ploff = iovoff;
+     assert(pkt);
+-    pkt->vlan_stripped = false;
+ 
+     if (strip_vlan) {
+-        pkt->vlan_stripped = eth_strip_vlan_ex(iov, iovcnt, iovoff, vet,
+-                                               pkt->ehdr_buf,
+-                                               &ploff, &tci);
++        pkt->ehdr_buf_len = eth_strip_vlan_ex(iov, iovcnt, iovoff, vet,
++                                              pkt->ehdr_buf,
++                                              &ploff, &tci);
++    } else {
++        pkt->ehdr_buf_len = 0;
+     }
+ 
+     pkt->tci = tci;
+@@ -162,8 +163,8 @@ void net_rx_pkt_dump(struct NetRxPkt *pkt)
+     NetRxPkt *pkt = (NetRxPkt *)pkt;
+     assert(pkt);
+ 
+-    printf("RX PKT: tot_len: %d, vlan_stripped: %d, vlan_tag: %d\n",
+-              pkt->tot_len, pkt->vlan_stripped, pkt->tci);
++    printf("RX PKT: tot_len: %d, ehdr_buf_len: %lu, vlan_tag: %d\n",
++              pkt->tot_len, pkt->ehdr_buf_len, pkt->tci);
+ #endif
+ }
+ 
+@@ -426,7 +427,7 @@ bool net_rx_pkt_is_vlan_stripped(struct NetRxPkt *pkt)
+ {
+     assert(pkt);
+ 
+-    return pkt->vlan_stripped;
++    return pkt->ehdr_buf_len ? true : false;
+ }
+ 
+ bool net_rx_pkt_has_virt_hdr(struct NetRxPkt *pkt)
+diff --git a/hw/pci/pci.c b/hw/pci/pci.c
+index 24fae16..637d545 100644
+--- a/hw/pci/pci.c
++++ b/hw/pci/pci.c
+@@ -982,8 +982,8 @@ static PCIDevice *do_pci_register_device(PCIDevice *pci_dev, PCIBus *bus,
+                pci_get_function_0(pci_dev)) {
+         error_setg(errp, "PCI: slot %d function 0 already ocuppied by %s,"
+                    " new func %s cannot be exposed to guest.",
+-                   PCI_SLOT(devfn),
+-                   bus->devices[PCI_DEVFN(PCI_SLOT(devfn), 0)]->name,
++                   PCI_SLOT(pci_get_function_0(pci_dev)->devfn),
++                   pci_get_function_0(pci_dev)->name,
+                    name);
+ 
+        return NULL;
+diff --git a/hw/ppc/spapr_ovec.c b/hw/ppc/spapr_ovec.c
+index 3eb1d59..0bcf311 100644
+--- a/hw/ppc/spapr_ovec.c
++++ b/hw/ppc/spapr_ovec.c
+@@ -250,5 +250,5 @@ int spapr_ovec_populate_dt(void *fdt, int fdt_offset,
+         }
+     }
+ 
+-    return fdt_setprop(fdt, fdt_offset, name, vec, vec_len);
++    return fdt_setprop(fdt, fdt_offset, name, vec, vec_len + 1);
+ }
+diff --git a/hw/s390x/css.c b/hw/s390x/css.c
+index 0f2580d..91a9fa4 100644
+--- a/hw/s390x/css.c
++++ b/hw/s390x/css.c
+@@ -1672,12 +1672,27 @@ void subch_device_save(SubchDev *s, QEMUFile *f)
+ 
+ int subch_device_load(SubchDev *s, QEMUFile *f)
+ {
++    SubchDev *old_s;
++    uint16_t old_schid = s->schid;
+     int i;
+ 
+     s->cssid = qemu_get_byte(f);
+     s->ssid = qemu_get_byte(f);
+     s->schid = qemu_get_be16(f);
+     s->devno = qemu_get_be16(f);
++    /* Re-assign subch. */
++    if (old_schid != s->schid) {
++        old_s = channel_subsys.css[s->cssid]->sch_set[s->ssid]->sch[old_schid];
++        /*
++         * (old_s != s) means that some other device has its correct
++         * subchannel already assigned (in load).
++         */
++        if (old_s == s) {
++            css_subch_assign(s->cssid, s->ssid, old_schid, s->devno, NULL);
++        }
++        /* It's OK to re-assign without a prior de-assign. */
++        css_subch_assign(s->cssid, s->ssid, s->schid, s->devno, s);
++    }
+     s->thinint_active = qemu_get_byte(f);
+     /* SCHIB */
+     /*     PMCW */
+diff --git a/hw/s390x/s390-virtio.c b/hw/s390x/s390-virtio.c
+index 0a96347..7a3a7fe 100644
+--- a/hw/s390x/s390-virtio.c
++++ b/hw/s390x/s390-virtio.c
+@@ -204,8 +204,8 @@ void s390_machine_reset(void)
+ {
+     S390CPU *ipl_cpu = S390_CPU(qemu_get_cpu(0));
+ 
+-    qemu_devices_reset();
+     s390_cmma_reset();
++    qemu_devices_reset();
+     s390_crypto_reset();
+ 
+     /* all cpus are stopped - configure and start the ipl cpu only */
+diff --git a/hw/scsi/mptsas.c b/hw/scsi/mptsas.c
+index ad87e78..421955b 100644
+--- a/hw/scsi/mptsas.c
++++ b/hw/scsi/mptsas.c
+@@ -756,7 +756,7 @@ static void mptsas_fetch_request(MPTSASState *s)
+ 
+     /* Read the message header from the guest first. */
+     addr = s->host_mfa_high_addr | MPTSAS_FIFO_GET(s, request_post);
+-    pci_dma_read(pci, addr, req, sizeof(hdr));
++    pci_dma_read(pci, addr, req, sizeof(*hdr));
+ 
+     if (hdr->Function < ARRAY_SIZE(mpi_request_sizes) &&
+         mpi_request_sizes[hdr->Function]) {
+@@ -766,8 +766,8 @@ static void mptsas_fetch_request(MPTSASState *s)
+          */
+         size = mpi_request_sizes[hdr->Function];
+         assert(size <= MPTSAS_MAX_REQUEST_SIZE);
+-        pci_dma_read(pci, addr + sizeof(hdr), &req[sizeof(hdr)],
+-                     size - sizeof(hdr));
++        pci_dma_read(pci, addr + sizeof(*hdr), &req[sizeof(*hdr)],
++                     size - sizeof(*hdr));
+     }
+ 
+     if (hdr->Function == MPI_FUNCTION_SCSI_IO_REQUEST) {
+diff --git a/hw/scsi/scsi-disk.c b/hw/scsi/scsi-disk.c
+index a963191..5796226 100644
+--- a/hw/scsi/scsi-disk.c
++++ b/hw/scsi/scsi-disk.c
+@@ -2694,7 +2694,7 @@ static bool scsi_block_is_passthrough(SCSIDiskState *s, uint8_t *buf)
+          * for the number of logical blocks specified in the length
+          * field).  For other modes, do not use scatter/gather operation.
+          */
+-        if ((buf[1] & 6) != 2) {
++        if ((buf[1] & 6) == 2) {
+             return false;
+         }
+         break;
+diff --git a/hw/sd/sdhci.c b/hw/sd/sdhci.c
+index 01fbf22..5bd5ab6 100644
+--- a/hw/sd/sdhci.c
++++ b/hw/sd/sdhci.c
+@@ -536,7 +536,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
+                 boundary_count -= block_size - begin;
+             }
+             dma_memory_read(&address_space_memory, s->sdmasysad,
+-                            &s->fifo_buffer[begin], s->data_count);
++                            &s->fifo_buffer[begin], s->data_count - begin);
+             s->sdmasysad += s->data_count - begin;
+             if (s->data_count == block_size) {
+                 for (n = 0; n < block_size; n++) {
+diff --git a/hw/virtio/trace-events b/hw/virtio/trace-events
+index 7b6f55e..6926eed 100644
+--- a/hw/virtio/trace-events
++++ b/hw/virtio/trace-events
+@@ -15,6 +15,8 @@ virtio_rng_pushed(void *rng, size_t len) "rng %p: %zd bytes pushed"
+ virtio_rng_request(void *rng, size_t size, unsigned quota) "rng %p: %zd bytes requested, %u bytes quota left"
+ 
+ # hw/virtio/virtio-balloon.c
++#
++virtio_balloon_bad_addr(uint64_t gpa) "%"PRIx64
+ virtio_balloon_handle_output(const char *name, uint64_t gpa) "section name: %s gpa: %"PRIx64
+ virtio_balloon_get_config(uint32_t num_pages, uint32_t actual) "num_pages: %d actual: %d"
+ virtio_balloon_set_config(uint32_t actual, uint32_t oldactual) "actual: %d oldactual: %d"
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index 884570a..a705e0e 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -228,8 +228,13 @@ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+ 
+             /* FIXME: remove get_system_memory(), but how? */
+             section = memory_region_find(get_system_memory(), pa, 1);
+-            if (!int128_nz(section.size) || !memory_region_is_ram(section.mr))
++            if (!int128_nz(section.size) ||
++                !memory_region_is_ram(section.mr) ||
++                memory_region_is_rom(section.mr) ||
++                memory_region_is_romd(section.mr)) {
++                trace_virtio_balloon_bad_addr(pa);
+                 continue;
++            }
+ 
+             trace_virtio_balloon_handle_output(memory_region_name(section.mr),
+                                                pa);
+diff --git a/hw/virtio/virtio-crypto.c b/hw/virtio/virtio-crypto.c
+index 2f2467e..c23e1ad 100644
+--- a/hw/virtio/virtio-crypto.c
++++ b/hw/virtio/virtio-crypto.c
+@@ -416,7 +416,7 @@ virtio_crypto_sym_op_helper(VirtIODevice *vdev,
+     uint32_t hash_start_src_offset = 0, len_to_hash = 0;
+     uint32_t cipher_start_src_offset = 0, len_to_cipher = 0;
+ 
+-    size_t max_len, curr_size = 0;
++    uint64_t max_len, curr_size = 0;
+     size_t s;
+ 
+     /* Plain cipher */
+@@ -441,7 +441,7 @@ virtio_crypto_sym_op_helper(VirtIODevice *vdev,
+         return NULL;
+     }
+ 
+-    max_len = iv_len + aad_len + src_len + dst_len + hash_result_len;
++    max_len = (uint64_t)iv_len + aad_len + src_len + dst_len + hash_result_len;
+     if (unlikely(max_len > vcrypto->conf.max_size)) {
+         virtio_error(vdev, "virtio-crypto too big length");
+         return NULL;
+diff --git a/hw/virtio/virtio-pci.c b/hw/virtio/virtio-pci.c
+index 21c2b9d..33eb1fb 100644
+--- a/hw/virtio/virtio-pci.c
++++ b/hw/virtio/virtio-pci.c
+@@ -1836,6 +1836,10 @@ static void virtio_pci_reset(DeviceState *qdev)
+ 
+     for (i = 0; i < VIRTIO_QUEUE_MAX; i++) {
+         proxy->vqs[i].enabled = 0;
++        proxy->vqs[i].num = 0;
++        proxy->vqs[i].desc[0] = proxy->vqs[i].desc[1] = 0;
++        proxy->vqs[i].avail[0] = proxy->vqs[i].avail[1] = 0;
++        proxy->vqs[i].used[0] = proxy->vqs[i].used[1] = 0;
+     }
+ }
+ 
+diff --git a/hw/virtio/virtio.c b/hw/virtio/virtio.c
+index 1af2de2..b2a477d 100644
+--- a/hw/virtio/virtio.c
++++ b/hw/virtio/virtio.c
+@@ -92,7 +92,7 @@ struct VirtQueue
+ 
+     uint16_t queue_index;
+ 
+-    int inuse;
++    unsigned int inuse;
+ 
+     uint16_t vector;
+     VirtIOHandleOutput handle_output;
+@@ -592,24 +592,12 @@ static void virtqueue_undo_map_desc(unsigned int out_num, unsigned int in_num,
+ }
+ 
+ static void virtqueue_map_iovec(struct iovec *sg, hwaddr *addr,
+-                                unsigned int *num_sg, unsigned int max_size,
++                                unsigned int *num_sg,
+                                 int is_write)
+ {
+     unsigned int i;
+     hwaddr len;
+ 
+-    /* Note: this function MUST validate input, some callers
+-     * are passing in num_sg values received over the network.
+-     */
+-    /* TODO: teach all callers that this can fail, and return failure instead
+-     * of asserting here.
+-     * When we do, we might be able to re-enable NDEBUG below.
+-     */
+-#ifdef NDEBUG
+-#error building with NDEBUG is not supported
+-#endif
+-    assert(*num_sg <= max_size);
+-
+     for (i = 0; i < *num_sg; i++) {
+         len = sg[i].iov_len;
+         sg[i].iov_base = cpu_physical_memory_map(addr[i], &len, is_write);
+@@ -626,10 +614,8 @@ static void virtqueue_map_iovec(struct iovec *sg, hwaddr *addr,
+ 
+ void virtqueue_map(VirtQueueElement *elem)
+ {
+-    virtqueue_map_iovec(elem->in_sg, elem->in_addr, &elem->in_num,
+-                        VIRTQUEUE_MAX_SIZE, 1);
+-    virtqueue_map_iovec(elem->out_sg, elem->out_addr, &elem->out_num,
+-                        VIRTQUEUE_MAX_SIZE, 0);
++    virtqueue_map_iovec(elem->in_sg, elem->in_addr, &elem->in_num, 1);
++    virtqueue_map_iovec(elem->out_sg, elem->out_addr, &elem->out_num, 0);
+ }
+ 
+ static void *virtqueue_alloc_element(size_t sz, unsigned out_num, unsigned in_num)
+@@ -790,6 +776,16 @@ void *qemu_get_virtqueue_element(QEMUFile *f, size_t sz)
+ 
+     qemu_get_buffer(f, (uint8_t *)&data, sizeof(VirtQueueElementOld));
+ 
++    /* TODO: teach all callers that this can fail, and return failure instead
++     * of asserting here.
++     * When we do, we might be able to re-enable NDEBUG below.
++     */
++#ifdef NDEBUG
++#error building with NDEBUG is not supported
++#endif
++    assert(ARRAY_SIZE(data.in_addr) >= data.in_num);
++    assert(ARRAY_SIZE(data.out_addr) >= data.out_num);
++
+     elem = virtqueue_alloc_element(sz, data.out_num, data.in_num);
+     elem->index = data.index;
+ 
+@@ -1260,7 +1256,18 @@ static void virtio_queue_notify_vq(VirtQueue *vq)
+ 
+ void virtio_queue_notify(VirtIODevice *vdev, int n)
+ {
+-    virtio_queue_notify_vq(&vdev->vq[n]);
++    VirtQueue *vq = &vdev->vq[n];
++
++    if (unlikely(!vq->vring.desc || vdev->broken)) {
++        return;
++    }
++
++    trace_virtio_queue_notify(vdev, vq - vdev->vq, vq);
++    if (vq->handle_aio_output) {
++        event_notifier_set(&vq->host_notifier);
++    } else if (vq->handle_output) {
++        vq->handle_output(vdev, vq);
++    }
+ }
+ 
+ uint16_t virtio_queue_vector(VirtIODevice *vdev, int n)
+@@ -1855,9 +1862,11 @@ int virtio_load(VirtIODevice *vdev, QEMUFile *f, int version_id)
+             /*
+              * Some devices migrate VirtQueueElements that have been popped
+              * from the avail ring but not yet returned to the used ring.
++             * Since max ring size < UINT16_MAX it's safe to use modulo
++             * UINT16_MAX + 1 subtraction.
+              */
+-            vdev->vq[i].inuse = vdev->vq[i].last_avail_idx -
+-                                vdev->vq[i].used_idx;
++            vdev->vq[i].inuse = (uint16_t)(vdev->vq[i].last_avail_idx -
++                                vdev->vq[i].used_idx);
+             if (vdev->vq[i].inuse > vdev->vq[i].vring.num) {
+                 error_report("VQ %d size 0x%x < last_avail_idx 0x%x - "
+                              "used_idx 0x%x",
+diff --git a/include/exec/exec-all.h b/include/exec/exec-all.h
+index a8c13ce..e596ff7 100644
+--- a/include/exec/exec-all.h
++++ b/include/exec/exec-all.h
+@@ -320,6 +320,7 @@ static inline void tb_set_jmp_target(TranslationBlock *tb,
+ static inline void tb_add_jump(TranslationBlock *tb, int n,
+                                TranslationBlock *tb_next)
+ {
++    assert(n < ARRAY_SIZE(tb->jmp_list_next));
+     if (tb->jmp_list_next[n]) {
+         /* Another thread has already done this while we were
+          * outside of the lock; nothing to do in this case */
+diff --git a/include/net/eth.h b/include/net/eth.h
+index 2013175..afeb45b 100644
+--- a/include/net/eth.h
++++ b/include/net/eth.h
+@@ -331,12 +331,12 @@ eth_get_pkt_tci(const void *p)
+     }
+ }
+ 
+-bool
++size_t
+ eth_strip_vlan(const struct iovec *iov, int iovcnt, size_t iovoff,
+                uint8_t *new_ehdr_buf,
+                uint16_t *payload_offset, uint16_t *tci);
+ 
+-bool
++size_t
+ eth_strip_vlan_ex(const struct iovec *iov, int iovcnt, size_t iovoff,
+                   uint16_t vet, uint8_t *new_ehdr_buf,
+                   uint16_t *payload_offset, uint16_t *tci);
+diff --git a/include/qom/object_interfaces.h b/include/qom/object_interfaces.h
+index 8b17f4d..fdd7603 100644
+--- a/include/qom/object_interfaces.h
++++ b/include/qom/object_interfaces.h
+@@ -76,23 +76,6 @@ void user_creatable_complete(Object *obj, Error **errp);
+ bool user_creatable_can_be_deleted(UserCreatable *uc, Error **errp);
+ 
+ /**
+- * user_creatable_add:
+- * @qdict: the object definition
+- * @v: the visitor
+- * @errp: if an error occurs, a pointer to an area to store the error
+- *
+- * Create an instance of the user creatable object whose type
+- * is defined in @qdict by the 'qom-type' field, placing it
+- * in the object composition tree with name provided by the
+- * 'id' field. The remaining fields in @qdict are used to
+- * initialize the object properties.
+- *
+- * Returns: the newly created object or NULL on error
+- */
+-Object *user_creatable_add(const QDict *qdict,
+-                           Visitor *v, Error **errp);
+-
+-/**
+  * user_creatable_add_type:
+  * @type: the object type name
+  * @id: the unique ID for the object
+diff --git a/include/ui/console.h b/include/ui/console.h
+index e2589e2..101f1c7 100644
+--- a/include/ui/console.h
++++ b/include/ui/console.h
+@@ -189,9 +189,6 @@ typedef struct DisplayChangeListenerOps {
+                            int x, int y, int w, int h);
+     void (*dpy_gfx_switch)(DisplayChangeListener *dcl,
+                            struct DisplaySurface *new_surface);
+-    void (*dpy_gfx_copy)(DisplayChangeListener *dcl,
+-                         int src_x, int src_y,
+-                         int dst_x, int dst_y, int w, int h);
+     bool (*dpy_gfx_check_format)(DisplayChangeListener *dcl,
+                                  pixman_format_code_t format);
+ 
+@@ -273,8 +270,6 @@ int dpy_set_ui_info(QemuConsole *con, QemuUIInfo *info);
+ void dpy_gfx_update(QemuConsole *con, int x, int y, int w, int h);
+ void dpy_gfx_replace_surface(QemuConsole *con,
+                              DisplaySurface *surface);
+-void dpy_gfx_copy(QemuConsole *con, int src_x, int src_y,
+-                  int dst_x, int dst_y, int w, int h);
+ void dpy_text_cursor(QemuConsole *con, int x, int y);
+ void dpy_text_update(QemuConsole *con, int x, int y, int w, int h);
+ void dpy_text_resize(QemuConsole *con, int w, int h);
+@@ -397,8 +392,6 @@ int qemu_console_get_height(QemuConsole *con, int fallback);
+ 
+ void console_select(unsigned int index);
+ void qemu_console_resize(QemuConsole *con, int width, int height);
+-void qemu_console_copy(QemuConsole *con, int src_x, int src_y,
+-                       int dst_x, int dst_y, int w, int h);
+ DisplaySurface *qemu_console_surface(QemuConsole *con);
+ 
+ /* console-gl.c */
+diff --git a/include/ui/gtk.h b/include/ui/gtk.h
+index 42ca0fe..b3b5005 100644
+--- a/include/ui/gtk.h
++++ b/include/ui/gtk.h
+@@ -18,6 +18,10 @@
+ #include <X11/XKBlib.h>
+ #endif
+ 
++#ifdef GDK_WINDOWING_WAYLAND
++#include <gdk/gdkwayland.h>
++#endif
++
+ #if defined(CONFIG_OPENGL)
+ #include "ui/egl-helpers.h"
+ #include "ui/egl-context.h"
+diff --git a/linux-user/host/s390x/safe-syscall.inc.S b/linux-user/host/s390x/safe-syscall.inc.S
+index f1b446a..414b44a 100644
+--- a/linux-user/host/s390x/safe-syscall.inc.S
++++ b/linux-user/host/s390x/safe-syscall.inc.S
+@@ -72,7 +72,7 @@ safe_syscall_base:
+ 	 */
+ safe_syscall_start:
+ 	/* if signal_pending is non-zero, don't do the call */
+-	lt	%r0,0(%r8)
++	icm	%r0,15,0(%r8)
+ 	jne	2f
+ 	svc	0
+ safe_syscall_end:
+diff --git a/linux-user/main.c b/linux-user/main.c
+index 75b199f..65a769c 100644
+--- a/linux-user/main.c
++++ b/linux-user/main.c
+@@ -1708,10 +1708,12 @@ void cpu_loop(CPUPPCState *env)
+              * in syscalls.
+              */
+             env->crf[0] &= ~0x1;
++            env->nip += 4;
+             ret = do_syscall(env, env->gpr[0], env->gpr[3], env->gpr[4],
+                              env->gpr[5], env->gpr[6], env->gpr[7],
+                              env->gpr[8], 0, 0);
+             if (ret == -TARGET_ERESTARTSYS) {
++                env->nip -= 4;
+                 break;
+             }
+             if (ret == (target_ulong)(-TARGET_QEMU_ESIGRETURN)) {
+@@ -1719,7 +1721,6 @@ void cpu_loop(CPUPPCState *env)
+                    Avoid corrupting register state.  */
+                 break;
+             }
+-            env->nip += 4;
+             if (ret > (target_ulong)(-515)) {
+                 env->crf[0] |= 0x1;
+                 ret = -ret;
+@@ -4045,6 +4046,8 @@ int main(int argc, char **argv, char **envp)
+ # endif
+ #elif defined TARGET_SH4
+         cpu_model = TYPE_SH7785_CPU;
++#elif defined TARGET_S390X
++        cpu_model = "qemu";
+ #else
+         cpu_model = "any";
+ #endif
+diff --git a/nbd/client.c b/nbd/client.c
+index ffb0743..55266c1 100644
+--- a/nbd/client.c
++++ b/nbd/client.c
+@@ -94,7 +94,7 @@ static ssize_t drop_sync(QIOChannel *ioc, size_t size)
+     char small[1024];
+     char *buffer;
+ 
+-    buffer = sizeof(small) < size ? small : g_malloc(MIN(65536, size));
++    buffer = sizeof(small) >= size ? small : g_malloc(MIN(65536, size));
+     while (size > 0) {
+         ssize_t count = read_sync(ioc, buffer, MIN(65536, size));
+ 
+diff --git a/net/eth.c b/net/eth.c
+index df81efb..5b9ba26 100644
+--- a/net/eth.c
++++ b/net/eth.c
+@@ -232,7 +232,7 @@ void eth_get_protocols(const struct iovec *iov, int iovcnt,
+     }
+ }
+ 
+-bool
++size_t
+ eth_strip_vlan(const struct iovec *iov, int iovcnt, size_t iovoff,
+                uint8_t *new_ehdr_buf,
+                uint16_t *payload_offset, uint16_t *tci)
+@@ -244,7 +244,7 @@ eth_strip_vlan(const struct iovec *iov, int iovcnt, size_t iovoff,
+                                new_ehdr, sizeof(*new_ehdr));
+ 
+     if (copied < sizeof(*new_ehdr)) {
+-        return false;
++        return 0;
+     }
+ 
+     switch (be16_to_cpu(new_ehdr->h_proto)) {
+@@ -254,7 +254,7 @@ eth_strip_vlan(const struct iovec *iov, int iovcnt, size_t iovoff,
+                             &vlan_hdr, sizeof(vlan_hdr));
+ 
+         if (copied < sizeof(vlan_hdr)) {
+-            return false;
++            return 0;
+         }
+ 
+         new_ehdr->h_proto = vlan_hdr.h_proto;
+@@ -268,18 +268,21 @@ eth_strip_vlan(const struct iovec *iov, int iovcnt, size_t iovoff,
+                                 PKT_GET_VLAN_HDR(new_ehdr), sizeof(vlan_hdr));
+ 
+             if (copied < sizeof(vlan_hdr)) {
+-                return false;
++                return 0;
+             }
+ 
+             *payload_offset += sizeof(vlan_hdr);
++
++            return sizeof(struct eth_header) + sizeof(struct vlan_header);
++        } else {
++            return sizeof(struct eth_header);
+         }
+-        return true;
+     default:
+-        return false;
++        return 0;
+     }
+ }
+ 
+-bool
++size_t
+ eth_strip_vlan_ex(const struct iovec *iov, int iovcnt, size_t iovoff,
+                   uint16_t vet, uint8_t *new_ehdr_buf,
+                   uint16_t *payload_offset, uint16_t *tci)
+@@ -291,7 +294,7 @@ eth_strip_vlan_ex(const struct iovec *iov, int iovcnt, size_t iovoff,
+                                new_ehdr, sizeof(*new_ehdr));
+ 
+     if (copied < sizeof(*new_ehdr)) {
+-        return false;
++        return 0;
+     }
+ 
+     if (be16_to_cpu(new_ehdr->h_proto) == vet) {
+@@ -299,17 +302,17 @@ eth_strip_vlan_ex(const struct iovec *iov, int iovcnt, size_t iovoff,
+                             &vlan_hdr, sizeof(vlan_hdr));
+ 
+         if (copied < sizeof(vlan_hdr)) {
+-            return false;
++            return 0;
+         }
+ 
+         new_ehdr->h_proto = vlan_hdr.h_proto;
+ 
+         *tci = be16_to_cpu(vlan_hdr.h_tci);
+         *payload_offset = iovoff + sizeof(*new_ehdr) + sizeof(vlan_hdr);
+-        return true;
++        return sizeof(struct eth_header);
+     }
+ 
+-    return false;
++    return 0;
+ }
+ 
+ void
+diff --git a/qapi/opts-visitor.c b/qapi/opts-visitor.c
+index 1048bbc..1453cf6 100644
+--- a/qapi/opts-visitor.c
++++ b/qapi/opts-visitor.c
+@@ -164,7 +164,7 @@ opts_check_struct(Visitor *v, Error **errp)
+     GHashTableIter iter;
+     GQueue *any;
+ 
+-    if (ov->depth > 0) {
++    if (ov->depth > 1) {
+         return;
+     }
+ 
+diff --git a/qemu-char.c b/qemu-char.c
+index 2c9940c..676944a 100644
+--- a/qemu-char.c
++++ b/qemu-char.c
+@@ -499,7 +499,7 @@ void qemu_chr_fe_printf(CharBackend *be, const char *fmt, ...)
+ 
+ static void remove_fd_in_watch(CharDriverState *chr);
+ static void mux_chr_set_handlers(CharDriverState *chr, GMainContext *context);
+-static void mux_set_focus(MuxDriver *d, int focus);
++static void mux_set_focus(CharDriverState *chr, int focus);
+ 
+ static int null_chr_write(CharDriverState *chr, const uint8_t *buf, int len)
+ {
+@@ -666,7 +666,7 @@ static int mux_proc_byte(CharDriverState *chr, MuxDriver *d, int ch)
+         case 'c':
+             assert(d->mux_cnt > 0); /* handler registered with first fe */
+             /* Switch to the next registered device */
+-            mux_set_focus(d, (d->focus + 1) % d->mux_cnt);
++            mux_set_focus(chr, (d->focus + 1) % d->mux_cnt);
+             break;
+         case 't':
+             d->timestamps = !d->timestamps;
+@@ -826,8 +826,10 @@ static void mux_chr_set_handlers(CharDriverState *chr, GMainContext *context)
+                              context, true);
+ }
+ 
+-static void mux_set_focus(MuxDriver *d, int focus)
++static void mux_set_focus(CharDriverState *chr, int focus)
+ {
++    MuxDriver *d = chr->opaque;
++
+     assert(focus >= 0);
+     assert(focus < d->mux_cnt);
+ 
+@@ -836,6 +838,7 @@ static void mux_set_focus(MuxDriver *d, int focus)
+     }
+ 
+     d->focus = focus;
++    chr->be = d->backends[focus];
+     mux_chr_send_event(d, d->focus, CHR_EVENT_MUX_IN);
+ }
+ 
+@@ -935,7 +938,9 @@ void qemu_chr_fe_deinit(CharBackend *b)
+ 
+     if (b->chr) {
+         qemu_chr_fe_set_handlers(b, NULL, NULL, NULL, NULL, NULL, true);
+-        b->chr->be = NULL;
++        if (b->chr->be == b) {
++            b->chr->be = NULL;
++        }
+         if (b->chr->is_mux) {
+             MuxDriver *d = b->chr->opaque;
+             d->backends[b->tag] = NULL;
+@@ -999,7 +1004,7 @@ void qemu_chr_fe_take_focus(CharBackend *b)
+     }
+ 
+     if (b->chr->is_mux) {
+-        mux_set_focus(b->chr->opaque, b->tag);
++        mux_set_focus(b->chr, b->tag);
+     }
+ }
+ 
+diff --git a/qga/commands-posix.c b/qga/commands-posix.c
+index ea37c09..73d93eb 100644
+--- a/qga/commands-posix.c
++++ b/qga/commands-posix.c
+@@ -1243,6 +1243,9 @@ int64_t qmp_guest_fsfreeze_freeze_list(bool has_mountpoints,
+          * filesystems may not implement fsfreeze for less obvious reasons.
+          * these will report EOPNOTSUPP. we simply ignore these when tallying
+          * the number of frozen filesystems.
++         * if a filesystem is mounted more than once (aka bind mount) a
++         * consecutive attempt to freeze an already frozen filesystem will
++         * return EBUSY.
+          *
+          * any other error means a failure to freeze a filesystem we
+          * expect to be freezable, so return an error in those cases
+@@ -1250,7 +1253,7 @@ int64_t qmp_guest_fsfreeze_freeze_list(bool has_mountpoints,
+          */
+         ret = ioctl(fd, FIFREEZE);
+         if (ret == -1) {
+-            if (errno != EOPNOTSUPP) {
++            if (errno != EOPNOTSUPP && errno != EBUSY) {
+                 error_setg_errno(errp, errno, "failed to freeze %s",
+                                  mount->dirname);
+                 close(fd);
+diff --git a/qom/object_interfaces.c b/qom/object_interfaces.c
+index ded4d84..fd7061c 100644
+--- a/qom/object_interfaces.c
++++ b/qom/object_interfaces.c
+@@ -35,57 +35,6 @@ bool user_creatable_can_be_deleted(UserCreatable *uc, Error **errp)
+     }
+ }
+ 
+-
+-Object *user_creatable_add(const QDict *qdict,
+-                           Visitor *v, Error **errp)
+-{
+-    char *type = NULL;
+-    char *id = NULL;
+-    Object *obj = NULL;
+-    Error *local_err = NULL;
+-    QDict *pdict;
+-
+-    pdict = qdict_clone_shallow(qdict);
+-
+-    visit_start_struct(v, NULL, NULL, 0, &local_err);
+-    if (local_err) {
+-        goto out;
+-    }
+-
+-    qdict_del(pdict, "qom-type");
+-    visit_type_str(v, "qom-type", &type, &local_err);
+-    if (local_err) {
+-        goto out_visit;
+-    }
+-
+-    qdict_del(pdict, "id");
+-    visit_type_str(v, "id", &id, &local_err);
+-    if (local_err) {
+-        goto out_visit;
+-    }
+-    visit_check_struct(v, &local_err);
+-    if (local_err) {
+-        goto out_visit;
+-    }
+-
+-    obj = user_creatable_add_type(type, id, pdict, v, &local_err);
+-
+-out_visit:
+-    visit_end_struct(v, NULL);
+-
+-out:
+-    QDECREF(pdict);
+-    g_free(id);
+-    g_free(type);
+-    if (local_err) {
+-        error_propagate(errp, local_err);
+-        object_unref(obj);
+-        return NULL;
+-    }
+-    return obj;
+-}
+-
+-
+ Object *user_creatable_add_type(const char *type, const char *id,
+                                 const QDict *qdict,
+                                 Visitor *v, Error **errp)
+@@ -158,13 +107,31 @@ Object *user_creatable_add_opts(QemuOpts *opts, Error **errp)
+ {
+     Visitor *v;
+     QDict *pdict;
+-    Object *obj = NULL;
++    Object *obj;
++    const char *id = qemu_opts_id(opts);
++    char *type = qemu_opt_get_del(opts, "qom-type");
+ 
+-    v = opts_visitor_new(opts);
++    if (!type) {
++        error_setg(errp, QERR_MISSING_PARAMETER, "qom-type");
++        return NULL;
++    }
++    if (!id) {
++        error_setg(errp, QERR_MISSING_PARAMETER, "id");
++        qemu_opt_set(opts, "qom-type", type, &error_abort);
++        g_free(type);
++        return NULL;
++    }
++
++    qemu_opts_set_id(opts, NULL);
+     pdict = qemu_opts_to_qdict(opts, NULL);
+ 
+-    obj = user_creatable_add(pdict, v, errp);
++    v = opts_visitor_new(opts);
++    obj = user_creatable_add_type(type, id, pdict, v, errp);
+     visit_free(v);
++
++    qemu_opts_set_id(opts, (char *) id);
++    qemu_opt_set(opts, "qom-type", type, &error_abort);
++    g_free(type);
+     QDECREF(pdict);
+     return obj;
+ }
+diff --git a/target-arm/translate-a64.c b/target-arm/translate-a64.c
+index 6dc27a6..f673d93 100644
+--- a/target-arm/translate-a64.c
++++ b/target-arm/translate-a64.c
+@@ -527,7 +527,7 @@ static inline void assert_fp_access_checked(DisasContext *s)
+ static inline int vec_reg_offset(DisasContext *s, int regno,
+                                  int element, TCGMemOp size)
+ {
+-    int offs = offsetof(CPUARMState, vfp.regs[regno * 2]);
++    int offs = 0;
+ #ifdef HOST_WORDS_BIGENDIAN
+     /* This is complicated slightly because vfp.regs[2n] is
+      * still the low half and  vfp.regs[2n+1] the high half
+@@ -540,6 +540,7 @@ static inline int vec_reg_offset(DisasContext *s, int regno,
+ #else
+     offs += element * (1 << size);
+ #endif
++    offs += offsetof(CPUARMState, vfp.regs[regno * 2]);
+     assert_fp_access_checked(s);
+     return offs;
+ }
+@@ -2829,9 +2830,9 @@ static void disas_ldst_single_struct(DisasContext *s, uint32_t insn)
+         } else {
+             /* Load/store one element per register */
+             if (is_load) {
+-                do_vec_ld(s, rt, index, tcg_addr, s->be_data + scale);
++                do_vec_ld(s, rt, index, tcg_addr, scale);
+             } else {
+-                do_vec_st(s, rt, index, tcg_addr, s->be_data + scale);
++                do_vec_st(s, rt, index, tcg_addr, scale);
+             }
+         }
+         tcg_gen_addi_i64(tcg_addr, tcg_addr, ebytes);
+diff --git a/target-i386/cpu.h b/target-i386/cpu.h
+index c605724..c1d2c5b 100644
+--- a/target-i386/cpu.h
++++ b/target-i386/cpu.h
+@@ -1610,8 +1610,9 @@ void helper_lock_init(void);
+ 
+ /* svm_helper.c */
+ void cpu_svm_check_intercept_param(CPUX86State *env1, uint32_t type,
+-                                   uint64_t param);
+-void cpu_vmexit(CPUX86State *nenv, uint32_t exit_code, uint64_t exit_info_1);
++                                   uint64_t param, uintptr_t retaddr);
++void cpu_vmexit(CPUX86State *nenv, uint32_t exit_code, uint64_t exit_info_1,
++                uintptr_t retaddr);
+ 
+ /* seg_helper.c */
+ void do_interrupt_x86_hardirq(CPUX86State *env, int intno, int is_hw);
+diff --git a/target-i386/excp_helper.c b/target-i386/excp_helper.c
+index f0dc499..ee596c6 100644
+--- a/target-i386/excp_helper.c
++++ b/target-i386/excp_helper.c
+@@ -39,7 +39,8 @@ void helper_raise_exception(CPUX86State *env, int exception_index)
+  * needed. It should only be called, if this is not an interrupt.
+  * Returns the new exception number.
+  */
+-static int check_exception(CPUX86State *env, int intno, int *error_code)
++static int check_exception(CPUX86State *env, int intno, int *error_code,
++                           uintptr_t retaddr)
+ {
+     int first_contributory = env->old_exception == 0 ||
+                               (env->old_exception >= 10 &&
+@@ -53,7 +54,7 @@ static int check_exception(CPUX86State *env, int intno, int *error_code)
+ #if !defined(CONFIG_USER_ONLY)
+     if (env->old_exception == EXCP08_DBLE) {
+         if (env->hflags & HF_SVMI_MASK) {
+-            cpu_vmexit(env, SVM_EXIT_SHUTDOWN, 0); /* does not return */
++            cpu_vmexit(env, SVM_EXIT_SHUTDOWN, 0, retaddr); /* does not return */
+         }
+ 
+         qemu_log_mask(CPU_LOG_RESET, "Triple fault\n");
+@@ -93,10 +94,10 @@ static void QEMU_NORETURN raise_interrupt2(CPUX86State *env, int intno,
+ 
+     if (!is_int) {
+         cpu_svm_check_intercept_param(env, SVM_EXIT_EXCP_BASE + intno,
+-                                      error_code);
+-        intno = check_exception(env, intno, &error_code);
++                                      error_code, retaddr);
++        intno = check_exception(env, intno, &error_code, retaddr);
+     } else {
+-        cpu_svm_check_intercept_param(env, SVM_EXIT_SWINT, 0);
++        cpu_svm_check_intercept_param(env, SVM_EXIT_SWINT, 0, retaddr);
+     }
+ 
+     cs->exception_index = intno;
+diff --git a/target-i386/helper.h b/target-i386/helper.h
+index 4e859eb..b360c03 100644
+--- a/target-i386/helper.h
++++ b/target-i386/helper.h
+@@ -98,7 +98,6 @@ DEF_HELPER_2(inl, tl, env, i32)
+ DEF_HELPER_FLAGS_4(bpt_io, TCG_CALL_NO_WG, void, env, i32, i32, tl)
+ 
+ DEF_HELPER_3(svm_check_intercept_param, void, env, i32, i64)
+-DEF_HELPER_3(vmexit, void, env, i32, i64)
+ DEF_HELPER_4(svm_check_io, void, env, i32, i32, i32)
+ DEF_HELPER_3(vmrun, void, env, int, int)
+ DEF_HELPER_1(vmmcall, void, env)
+diff --git a/target-i386/misc_helper.c b/target-i386/misc_helper.c
+index 3f666b4..e145a2e 100644
+--- a/target-i386/misc_helper.c
++++ b/target-i386/misc_helper.c
+@@ -101,7 +101,7 @@ void helper_cpuid(CPUX86State *env)
+ {
+     uint32_t eax, ebx, ecx, edx;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_CPUID, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_CPUID, 0, GETPC());
+ 
+     cpu_x86_cpuid(env, (uint32_t)env->regs[R_EAX], (uint32_t)env->regs[R_ECX],
+                   &eax, &ebx, &ecx, &edx);
+@@ -125,7 +125,7 @@ target_ulong helper_read_crN(CPUX86State *env, int reg)
+ {
+     target_ulong val;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_READ_CR0 + reg, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_READ_CR0 + reg, 0, GETPC());
+     switch (reg) {
+     default:
+         val = env->cr[reg];
+@@ -143,7 +143,7 @@ target_ulong helper_read_crN(CPUX86State *env, int reg)
+ 
+ void helper_write_crN(CPUX86State *env, int reg, target_ulong t0)
+ {
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_WRITE_CR0 + reg, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_WRITE_CR0 + reg, 0, GETPC());
+     switch (reg) {
+     case 0:
+         cpu_x86_update_cr0(env, t0);
+@@ -179,7 +179,7 @@ void helper_invlpg(CPUX86State *env, target_ulong addr)
+ {
+     X86CPU *cpu = x86_env_get_cpu(env);
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_INVLPG, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_INVLPG, 0, GETPC());
+     tlb_flush_page(CPU(cpu), addr);
+ }
+ 
+@@ -190,7 +190,7 @@ void helper_rdtsc(CPUX86State *env)
+     if ((env->cr[4] & CR4_TSD_MASK) && ((env->hflags & HF_CPL_MASK) != 0)) {
+         raise_exception_ra(env, EXCP0D_GPF, GETPC());
+     }
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_RDTSC, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_RDTSC, 0, GETPC());
+ 
+     val = cpu_get_tsc(env) + env->tsc_offset;
+     env->regs[R_EAX] = (uint32_t)(val);
+@@ -208,7 +208,7 @@ void helper_rdpmc(CPUX86State *env)
+     if ((env->cr[4] & CR4_PCE_MASK) && ((env->hflags & HF_CPL_MASK) != 0)) {
+         raise_exception_ra(env, EXCP0D_GPF, GETPC());
+     }
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_RDPMC, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_RDPMC, 0, GETPC());
+ 
+     /* currently unimplemented */
+     qemu_log_mask(LOG_UNIMP, "x86: unimplemented rdpmc\n");
+@@ -228,7 +228,7 @@ void helper_wrmsr(CPUX86State *env)
+ {
+     uint64_t val;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_MSR, 1);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_MSR, 1, GETPC());
+ 
+     val = ((uint32_t)env->regs[R_EAX]) |
+         ((uint64_t)((uint32_t)env->regs[R_EDX]) << 32);
+@@ -388,7 +388,7 @@ void helper_rdmsr(CPUX86State *env)
+ {
+     uint64_t val;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_MSR, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_MSR, 0, GETPC());
+ 
+     switch ((uint32_t)env->regs[R_ECX]) {
+     case MSR_IA32_SYSENTER_CS:
+@@ -557,7 +557,7 @@ void helper_hlt(CPUX86State *env, int next_eip_addend)
+ {
+     X86CPU *cpu = x86_env_get_cpu(env);
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_HLT, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_HLT, 0, GETPC());
+     env->eip += next_eip_addend;
+ 
+     do_hlt(cpu);
+@@ -569,7 +569,7 @@ void helper_monitor(CPUX86State *env, target_ulong ptr)
+         raise_exception_ra(env, EXCP0D_GPF, GETPC());
+     }
+     /* XXX: store address? */
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_MONITOR, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_MONITOR, 0, GETPC());
+ }
+ 
+ void helper_mwait(CPUX86State *env, int next_eip_addend)
+@@ -580,7 +580,7 @@ void helper_mwait(CPUX86State *env, int next_eip_addend)
+     if ((uint32_t)env->regs[R_ECX] != 0) {
+         raise_exception_ra(env, EXCP0D_GPF, GETPC());
+     }
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_MWAIT, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_MWAIT, 0, GETPC());
+     env->eip += next_eip_addend;
+ 
+     cpu = x86_env_get_cpu(env);
+@@ -597,7 +597,7 @@ void helper_pause(CPUX86State *env, int next_eip_addend)
+ {
+     X86CPU *cpu = x86_env_get_cpu(env);
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_PAUSE, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_PAUSE, 0, GETPC());
+     env->eip += next_eip_addend;
+ 
+     do_pause(cpu);
+diff --git a/target-i386/seg_helper.c b/target-i386/seg_helper.c
+index fb79f31..ce8f4d7 100644
+--- a/target-i386/seg_helper.c
++++ b/target-i386/seg_helper.c
+@@ -1334,7 +1334,7 @@ bool x86_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
+     } else if (env->hflags2 & HF2_GIF_MASK) {
+         if ((interrupt_request & CPU_INTERRUPT_SMI) &&
+             !(env->hflags & HF_SMM_MASK)) {
+-            cpu_svm_check_intercept_param(env, SVM_EXIT_SMI, 0);
++            cpu_svm_check_intercept_param(env, SVM_EXIT_SMI, 0, 0);
+             cs->interrupt_request &= ~CPU_INTERRUPT_SMI;
+             do_smm_enter(cpu);
+             ret = true;
+@@ -1355,7 +1355,7 @@ bool x86_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
+                      (env->eflags & IF_MASK &&
+                       !(env->hflags & HF_INHIBIT_IRQ_MASK))))) {
+             int intno;
+-            cpu_svm_check_intercept_param(env, SVM_EXIT_INTR, 0);
++            cpu_svm_check_intercept_param(env, SVM_EXIT_INTR, 0, 0);
+             cs->interrupt_request &= ~(CPU_INTERRUPT_HARD |
+                                        CPU_INTERRUPT_VIRQ);
+             intno = cpu_get_pic_interrupt(env);
+@@ -1371,7 +1371,7 @@ bool x86_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
+                    !(env->hflags & HF_INHIBIT_IRQ_MASK)) {
+             int intno;
+             /* FIXME: this should respect TPR */
+-            cpu_svm_check_intercept_param(env, SVM_EXIT_VINTR, 0);
++            cpu_svm_check_intercept_param(env, SVM_EXIT_VINTR, 0, 0);
+             intno = x86_ldl_phys(cs, env->vm_vmcb
+                              + offsetof(struct vmcb, control.int_vector));
+             qemu_log_mask(CPU_LOG_TB_IN_ASM,
+diff --git a/target-i386/svm_helper.c b/target-i386/svm_helper.c
+index 782b3f1..7c94be4 100644
+--- a/target-i386/svm_helper.c
++++ b/target-i386/svm_helper.c
+@@ -60,11 +60,8 @@ void helper_invlpga(CPUX86State *env, int aflag)
+ {
+ }
+ 
+-void helper_vmexit(CPUX86State *env, uint32_t exit_code, uint64_t exit_info_1)
+-{
+-}
+-
+-void cpu_vmexit(CPUX86State *nenv, uint32_t exit_code, uint64_t exit_info_1)
++void cpu_vmexit(CPUX86State *nenv, uint32_t exit_code, uint64_t exit_info_1,
++                uintptr_t retaddr)
+ {
+ }
+ 
+@@ -74,7 +71,7 @@ void helper_svm_check_intercept_param(CPUX86State *env, uint32_t type,
+ }
+ 
+ void cpu_svm_check_intercept_param(CPUX86State *env, uint32_t type,
+-                                   uint64_t param)
++                                   uint64_t param, uintptr_t retaddr)
+ {
+ }
+ 
+@@ -130,7 +127,7 @@ void helper_vmrun(CPUX86State *env, int aflag, int next_eip_addend)
+     uint32_t event_inj;
+     uint32_t int_ctl;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_VMRUN, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_VMRUN, 0, GETPC());
+ 
+     if (aflag == 2) {
+         addr = env->regs[R_EAX];
+@@ -355,7 +352,7 @@ void helper_vmrun(CPUX86State *env, int aflag, int next_eip_addend)
+ 
+ void helper_vmmcall(CPUX86State *env)
+ {
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_VMMCALL, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_VMMCALL, 0, GETPC());
+     raise_exception(env, EXCP06_ILLOP);
+ }
+ 
+@@ -364,7 +361,7 @@ void helper_vmload(CPUX86State *env, int aflag)
+     CPUState *cs = CPU(x86_env_get_cpu(env));
+     target_ulong addr;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_VMLOAD, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_VMLOAD, 0, GETPC());
+ 
+     if (aflag == 2) {
+         addr = env->regs[R_EAX];
+@@ -404,7 +401,7 @@ void helper_vmsave(CPUX86State *env, int aflag)
+     CPUState *cs = CPU(x86_env_get_cpu(env));
+     target_ulong addr;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_VMSAVE, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_VMSAVE, 0, GETPC());
+ 
+     if (aflag == 2) {
+         addr = env->regs[R_EAX];
+@@ -445,19 +442,19 @@ void helper_vmsave(CPUX86State *env, int aflag)
+ 
+ void helper_stgi(CPUX86State *env)
+ {
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_STGI, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_STGI, 0, GETPC());
+     env->hflags2 |= HF2_GIF_MASK;
+ }
+ 
+ void helper_clgi(CPUX86State *env)
+ {
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_CLGI, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_CLGI, 0, GETPC());
+     env->hflags2 &= ~HF2_GIF_MASK;
+ }
+ 
+ void helper_skinit(CPUX86State *env)
+ {
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_SKINIT, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_SKINIT, 0, GETPC());
+     /* XXX: not implemented */
+     raise_exception(env, EXCP06_ILLOP);
+ }
+@@ -467,7 +464,7 @@ void helper_invlpga(CPUX86State *env, int aflag)
+     X86CPU *cpu = x86_env_get_cpu(env);
+     target_ulong addr;
+ 
+-    cpu_svm_check_intercept_param(env, SVM_EXIT_INVLPGA, 0);
++    cpu_svm_check_intercept_param(env, SVM_EXIT_INVLPGA, 0, GETPC());
+ 
+     if (aflag == 2) {
+         addr = env->regs[R_EAX];
+@@ -480,8 +477,8 @@ void helper_invlpga(CPUX86State *env, int aflag)
+     tlb_flush_page(CPU(cpu), addr);
+ }
+ 
+-void helper_svm_check_intercept_param(CPUX86State *env, uint32_t type,
+-                                      uint64_t param)
++void cpu_svm_check_intercept_param(CPUX86State *env, uint32_t type,
++                                   uint64_t param, uintptr_t retaddr)
+ {
+     CPUState *cs = CPU(x86_env_get_cpu(env));
+ 
+@@ -491,27 +488,27 @@ void helper_svm_check_intercept_param(CPUX86State *env, uint32_t type,
+     switch (type) {
+     case SVM_EXIT_READ_CR0 ... SVM_EXIT_READ_CR0 + 8:
+         if (env->intercept_cr_read & (1 << (type - SVM_EXIT_READ_CR0))) {
+-            helper_vmexit(env, type, param);
++            cpu_vmexit(env, type, param, retaddr);
+         }
+         break;
+     case SVM_EXIT_WRITE_CR0 ... SVM_EXIT_WRITE_CR0 + 8:
+         if (env->intercept_cr_write & (1 << (type - SVM_EXIT_WRITE_CR0))) {
+-            helper_vmexit(env, type, param);
++            cpu_vmexit(env, type, param, retaddr);
+         }
+         break;
+     case SVM_EXIT_READ_DR0 ... SVM_EXIT_READ_DR0 + 7:
+         if (env->intercept_dr_read & (1 << (type - SVM_EXIT_READ_DR0))) {
+-            helper_vmexit(env, type, param);
++            cpu_vmexit(env, type, param, retaddr);
+         }
+         break;
+     case SVM_EXIT_WRITE_DR0 ... SVM_EXIT_WRITE_DR0 + 7:
+         if (env->intercept_dr_write & (1 << (type - SVM_EXIT_WRITE_DR0))) {
+-            helper_vmexit(env, type, param);
++            cpu_vmexit(env, type, param, retaddr);
+         }
+         break;
+     case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 31:
+         if (env->intercept_exceptions & (1 << (type - SVM_EXIT_EXCP_BASE))) {
+-            helper_vmexit(env, type, param);
++            cpu_vmexit(env, type, param, retaddr);
+         }
+         break;
+     case SVM_EXIT_MSR:
+@@ -538,28 +535,28 @@ void helper_svm_check_intercept_param(CPUX86State *env, uint32_t type,
+                 t0 %= 8;
+                 break;
+             default:
+-                helper_vmexit(env, type, param);
++                cpu_vmexit(env, type, param, retaddr);
+                 t0 = 0;
+                 t1 = 0;
+                 break;
+             }
+             if (x86_ldub_phys(cs, addr + t1) & ((1 << param) << t0)) {
+-                helper_vmexit(env, type, param);
++                cpu_vmexit(env, type, param, retaddr);
+             }
+         }
+         break;
+     default:
+         if (env->intercept & (1ULL << (type - SVM_EXIT_INTR))) {
+-            helper_vmexit(env, type, param);
++            cpu_vmexit(env, type, param, retaddr);
+         }
+         break;
+     }
+ }
+ 
+-void cpu_svm_check_intercept_param(CPUX86State *env, uint32_t type,
+-                                   uint64_t param)
++void helper_svm_check_intercept_param(CPUX86State *env, uint32_t type,
++                                      uint64_t param)
+ {
+-    helper_svm_check_intercept_param(env, type, param);
++    cpu_svm_check_intercept_param(env, type, param, GETPC());
+ }
+ 
+ void helper_svm_check_io(CPUX86State *env, uint32_t port, uint32_t param,
+@@ -578,17 +575,22 @@ void helper_svm_check_io(CPUX86State *env, uint32_t port, uint32_t param,
+             x86_stq_phys(cs,
+                      env->vm_vmcb + offsetof(struct vmcb, control.exit_info_2),
+                      env->eip + next_eip_addend);
+-            helper_vmexit(env, SVM_EXIT_IOIO, param | (port << 16));
++            cpu_vmexit(env, SVM_EXIT_IOIO, param | (port << 16), GETPC());
+         }
+     }
+ }
+ 
+ /* Note: currently only 32 bits of exit_code are used */
+-void helper_vmexit(CPUX86State *env, uint32_t exit_code, uint64_t exit_info_1)
++void cpu_vmexit(CPUX86State *env, uint32_t exit_code, uint64_t exit_info_1,
++                uintptr_t retaddr)
+ {
+     CPUState *cs = CPU(x86_env_get_cpu(env));
+     uint32_t int_ctl;
+ 
++    if (retaddr) {
++        cpu_restore_state(cs, retaddr);
++    }
++
+     qemu_log_mask(CPU_LOG_TB_IN_ASM, "vmexit(%08x, %016" PRIx64 ", %016"
+                   PRIx64 ", " TARGET_FMT_lx ")!\n",
+                   exit_code, exit_info_1,
+@@ -766,9 +768,4 @@ void helper_vmexit(CPUX86State *env, uint32_t exit_code, uint64_t exit_info_1)
+     cpu_loop_exit(cs);
+ }
+ 
+-void cpu_vmexit(CPUX86State *env, uint32_t exit_code, uint64_t exit_info_1)
+-{
+-    helper_vmexit(env, exit_code, exit_info_1);
+-}
+-
+ #endif
+diff --git a/target-s390x/cpu_models.c b/target-s390x/cpu_models.c
+index c1e729d..1a0702c 100644
+--- a/target-s390x/cpu_models.c
++++ b/target-s390x/cpu_models.c
+@@ -659,7 +659,6 @@ static void check_compatibility(const S390CPUModel *max_model,
+ 
+ static S390CPUModel *get_max_cpu_model(Error **errp)
+ {
+-#ifndef CONFIG_USER_ONLY
+     static S390CPUModel max_model;
+     static bool cached;
+ 
+@@ -679,7 +678,6 @@ static S390CPUModel *get_max_cpu_model(Error **errp)
+         cached = true;
+         return &max_model;
+     }
+-#endif
+     return NULL;
+ }
+ 
+diff --git a/target-s390x/kvm.c b/target-s390x/kvm.c
+index 97afe02..5fc4ed1 100644
+--- a/target-s390x/kvm.c
++++ b/target-s390x/kvm.c
+@@ -197,7 +197,7 @@ void kvm_s390_cmma_reset(void)
+         .attr = KVM_S390_VM_MEM_CLR_CMMA,
+     };
+ 
+-    if (!mem_path || !kvm_s390_cmma_available()) {
++    if (mem_path || !kvm_s390_cmma_available()) {
+         return;
+     }
+ 
+diff --git a/target-sparc/translate.c b/target-sparc/translate.c
+index 2205f89..7245c09 100644
+--- a/target-sparc/translate.c
++++ b/target-sparc/translate.c
+@@ -2425,8 +2425,31 @@ static void gen_ldstub_asi(DisasContext *dc, TCGv dst, TCGv addr, int insn)
+         gen_ldstub(dc, dst, addr, da.mem_idx);
+         break;
+     default:
+-        /* ??? Should be DAE_invalid_asi.  */
+-        gen_exception(dc, TT_DATA_ACCESS);
++        /* ??? In theory, this should be raise DAE_invalid_asi.
++           But the SS-20 roms do ldstuba [%l0] #ASI_M_CTL, %o1.  */
++        if (parallel_cpus) {
++            gen_helper_exit_atomic(cpu_env);
++        } else {
++            TCGv_i32 r_asi = tcg_const_i32(da.asi);
++            TCGv_i32 r_mop = tcg_const_i32(MO_UB);
++            TCGv_i64 s64, t64;
++
++            save_state(dc);
++            t64 = tcg_temp_new_i64();
++            gen_helper_ld_asi(t64, cpu_env, addr, r_asi, r_mop);
++
++            s64 = tcg_const_i64(0xff);
++            gen_helper_st_asi(cpu_env, addr, s64, r_asi, r_mop);
++            tcg_temp_free_i64(s64);
++            tcg_temp_free_i32(r_mop);
++            tcg_temp_free_i32(r_asi);
++
++            tcg_gen_trunc_i64_tl(dst, t64);
++            tcg_temp_free_i64(t64);
++
++            /* End the TB.  */
++            dc->npc = DYNAMIC_PC;
++        }
+         break;
+     }
+ }
+diff --git a/tcg/aarch64/tcg-target.inc.c b/tcg/aarch64/tcg-target.inc.c
+index 1939d35..2d7cc35 100644
+--- a/tcg/aarch64/tcg-target.inc.c
++++ b/tcg/aarch64/tcg-target.inc.c
+@@ -581,11 +581,9 @@ static void tcg_out_logicali(TCGContext *s, AArch64Insn insn, TCGType ext,
+ static void tcg_out_movi(TCGContext *s, TCGType type, TCGReg rd,
+                          tcg_target_long value)
+ {
+-    AArch64Insn insn;
+     int i, wantinv, shift;
+     tcg_target_long svalue = value;
+     tcg_target_long ivalue = ~value;
+-    tcg_target_long imask;
+ 
+     /* For 32-bit values, discard potential garbage in value.  For 64-bit
+        values within [2**31, 2**32-1], we can create smaller sequences by
+@@ -631,42 +629,35 @@ static void tcg_out_movi(TCGContext *s, TCGType type, TCGReg rd,
+ 
+     /* Would it take fewer insns to begin with MOVN?  For the value and its
+        inverse, count the number of 16-bit lanes that are 0.  */
+-    for (i = wantinv = imask = 0; i < 64; i += 16) {
++    for (i = wantinv = 0; i < 64; i += 16) {
+         tcg_target_long mask = 0xffffull << i;
+-        if ((value & mask) == 0) {
+-            wantinv -= 1;
+-        }
+-        if ((ivalue & mask) == 0) {
+-            wantinv += 1;
+-            imask |= mask;
+-        }
+-    }
+-
+-    /* If we had more 0xffff than 0x0000, invert VALUE and use MOVN.  */
+-    insn = I3405_MOVZ;
+-    if (wantinv > 0) {
+-        value = ivalue;
+-        insn = I3405_MOVN;
+-    }
+-
+-    /* Find the lowest lane that is not 0x0000.  */
+-    shift = ctz64(value) & (63 & -16);
+-    tcg_out_insn_3405(s, insn, type, rd, value >> shift, shift);
+-
+-    if (wantinv > 0) {
+-        /* Re-invert the value, so MOVK sees non-inverted bits.  */
+-        value = ~value;
+-        /* Clear out all the 0xffff lanes.  */
+-        value ^= imask;
++        wantinv -= ((value & mask) == 0);
++        wantinv += ((ivalue & mask) == 0);
+     }
+-    /* Clear out the lane that we just set.  */
+-    value &= ~(0xffffUL << shift);
+ 
+-    /* Iterate until all lanes have been set, and thus cleared from VALUE.  */
+-    while (value) {
++    if (wantinv <= 0) {
++        /* Find the lowest lane that is not 0x0000.  */
+         shift = ctz64(value) & (63 & -16);
+-        tcg_out_insn(s, 3405, MOVK, type, rd, value >> shift, shift);
++        tcg_out_insn(s, 3405, MOVZ, type, rd, value >> shift, shift);
++        /* Clear out the lane that we just set.  */
+         value &= ~(0xffffUL << shift);
++        /* Iterate until all non-zero lanes have been processed.  */
++        while (value) {
++            shift = ctz64(value) & (63 & -16);
++            tcg_out_insn(s, 3405, MOVK, type, rd, value >> shift, shift);
++            value &= ~(0xffffUL << shift);
++        }
++    } else {
++        /* Like above, but with the inverted value and MOVN to start.  */
++        shift = ctz64(ivalue) & (63 & -16);
++        tcg_out_insn(s, 3405, MOVN, type, rd, ivalue >> shift, shift);
++        ivalue &= ~(0xffffUL << shift);
++        while (ivalue) {
++            shift = ctz64(ivalue) & (63 & -16);
++            /* Provide MOVK with the non-inverted value.  */
++            tcg_out_insn(s, 3405, MOVK, type, rd, ~(ivalue >> shift), shift);
++            ivalue &= ~(0xffffUL << shift);
++        }
+     }
+ }
+ 
+@@ -965,6 +956,15 @@ static inline void tcg_out_addsub2(TCGContext *s, int ext, TCGReg rl,
+             insn = I3401_SUBSI;
+             bl = -bl;
+         }
++        if (unlikely(al == TCG_REG_XZR)) {
++            /* ??? We want to allow al to be zero for the benefit of
++               negation via subtraction.  However, that leaves open the
++               possibility of adding 0+const in the low part, and the
++               immediate add instructions encode XSP not XZR.  Don't try
++               anything more elaborate here than loading another zero.  */
++            al = TCG_REG_TMP;
++            tcg_out_movi(s, ext, al, 0);
++        }
+         tcg_out_insn_3401(s, insn, ext, rl, al, bl);
+     } else {
+         tcg_out_insn_3502(s, sub ? I3502_SUBS : I3502_ADDS, ext, rl, al, bl);
+diff --git a/tests/test-opts-visitor.c b/tests/test-opts-visitor.c
+index 0a9e75f..2886a72 100644
+--- a/tests/test-opts-visitor.c
++++ b/tests/test-opts-visitor.c
+@@ -172,6 +172,25 @@ expect_u64_max(OptsVisitorFixture *f, gconstpointer test_data)
+ 
+ /* test cases */
+ 
++static void
++test_opts_dict_unvisited(void)
++{
++    Error *err = NULL;
++    QemuOpts *opts;
++    Visitor *v;
++    UserDefOptions *userdef;
++
++    opts = qemu_opts_parse(qemu_find_opts("userdef"), "i64x=0,bogus=1", false,
++                           &error_abort);
++
++    v = opts_visitor_new(opts);
++    visit_type_UserDefOptions(v, NULL, &userdef, &err);
++    error_free_or_abort(&err);
++    visit_free(v);
++    qemu_opts_del(opts);
++    g_assert(!userdef);
++}
++
+ int
+ main(int argc, char **argv)
+ {
+@@ -263,6 +282,8 @@ main(int argc, char **argv)
+     add_test("/visitor/opts/i64/range/2big/full", &expect_fail,
+              "i64=-0x8000000000000000-0x7fffffffffffffff");
+ 
++    g_test_add_func("/visitor/opts/dict/unvisited", test_opts_dict_unvisited);
++
+     g_test_run();
+     return 0;
+ }
+diff --git a/thread-pool.c b/thread-pool.c
+index 6fba913..4157210 100644
+--- a/thread-pool.c
++++ b/thread-pool.c
+@@ -185,6 +185,13 @@ restart:
+             qemu_bh_schedule(pool->completion_bh);
+ 
+             elem->common.cb(elem->common.opaque, elem->ret);
++
++            /* We can safely cancel the completion_bh here regardless of someone
++             * else having scheduled it meanwhile because we reenter the
++             * completion function anyway (goto restart).
++             */
++            qemu_bh_cancel(pool->completion_bh);
++
+             qemu_aio_unref(elem);
+             goto restart;
+         } else {
+diff --git a/ui/console.c b/ui/console.c
+index ed888e5..3af7fc9 100644
+--- a/ui/console.c
++++ b/ui/console.c
+@@ -1562,27 +1562,6 @@ static void dpy_refresh(DisplayState *s)
+     }
+ }
+ 
+-void dpy_gfx_copy(QemuConsole *con, int src_x, int src_y,
+-                  int dst_x, int dst_y, int w, int h)
+-{
+-    DisplayState *s = con->ds;
+-    DisplayChangeListener *dcl;
+-
+-    if (!qemu_console_is_visible(con)) {
+-        return;
+-    }
+-    QLIST_FOREACH(dcl, &s->listeners, next) {
+-        if (con != (dcl->con ? dcl->con : active_console)) {
+-            continue;
+-        }
+-        if (dcl->ops->dpy_gfx_copy) {
+-            dcl->ops->dpy_gfx_copy(dcl, src_x, src_y, dst_x, dst_y, w, h);
+-        } else { /* TODO */
+-            dcl->ops->dpy_gfx_update(dcl, dst_x, dst_y, w, h);
+-        }
+-    }
+-}
+-
+ void dpy_text_cursor(QemuConsole *con, int x, int y)
+ {
+     DisplayState *s = con->ds;
+@@ -2120,13 +2099,6 @@ void qemu_console_resize(QemuConsole *s, int width, int height)
+     dpy_gfx_replace_surface(s, surface);
+ }
+ 
+-void qemu_console_copy(QemuConsole *con, int src_x, int src_y,
+-                       int dst_x, int dst_y, int w, int h)
+-{
+-    assert(con->console_type == GRAPHIC_CONSOLE);
+-    dpy_gfx_copy(con, src_x, src_y, dst_x, dst_y, w, h);
+-}
+-
+ DisplaySurface *qemu_console_surface(QemuConsole *console)
+ {
+     return console->surface;
+diff --git a/ui/gtk.c b/ui/gtk.c
+index a216216..356f400 100644
+--- a/ui/gtk.c
++++ b/ui/gtk.c
+@@ -90,6 +90,9 @@
+ #ifndef GDK_IS_X11_DISPLAY
+ #define GDK_IS_X11_DISPLAY(dpy) (dpy == dpy)
+ #endif
++#ifndef GDK_IS_WAYLAND_DISPLAY
++#define GDK_IS_WAYLAND_DISPLAY(dpy) (dpy == dpy)
++#endif
+ #ifndef GDK_IS_WIN32_DISPLAY
+ #define GDK_IS_WIN32_DISPLAY(dpy) (dpy == dpy)
+ #endif
+@@ -1054,6 +1057,10 @@ static int gd_map_keycode(GtkDisplayState *s, GdkDisplay *dpy, int gdk_keycode)
+             qemu_keycode = translate_xfree86_keycode(gdk_keycode - 97);
+         }
+ #endif
++#ifdef GDK_WINDOWING_WAYLAND
++    } else if (GDK_IS_WAYLAND_DISPLAY(dpy) && gdk_keycode < 158) {
++        qemu_keycode = translate_evdev_keycode(gdk_keycode - 97);
++#endif
+     } else if (gdk_keycode == 208) { /* Hiragana_Katakana */
+         qemu_keycode = 0x70;
+     } else if (gdk_keycode == 211) { /* backslash */
+@@ -2171,6 +2178,8 @@ static gboolean gtkinit;
+ 
+ void gtk_display_init(DisplayState *ds, bool full_screen, bool grab_on_hover)
+ {
++    VirtualConsole *vc;
++
+     GtkDisplayState *s = g_malloc0(sizeof(*s));
+     char *filename;
+     GdkDisplay *window_display;
+@@ -2249,9 +2258,11 @@ void gtk_display_init(DisplayState *ds, bool full_screen, bool grab_on_hover)
+     }
+ #endif
+ 
++    vc = gd_vc_find_current(s);
++    gtk_widget_set_sensitive(s->view_menu, vc != NULL);
+ #ifdef CONFIG_VTE
+     gtk_widget_set_sensitive(s->copy_item,
+-                             gd_vc_find_current(s)->type == GD_VC_VTE);
++                             vc && vc->type == GD_VC_VTE);
+ #endif
+ 
+     if (full_screen) {
+diff --git a/ui/vnc.c b/ui/vnc.c
+index 2c28a59..2dc922e 100644
+--- a/ui/vnc.c
++++ b/ui/vnc.c
+@@ -872,105 +872,6 @@ int vnc_send_framebuffer_update(VncState *vs, int x, int y, int w, int h)
+     return n;
+ }
+ 
+-static void vnc_copy(VncState *vs, int src_x, int src_y, int dst_x, int dst_y, int w, int h)
+-{
+-    /* send bitblit op to the vnc client */
+-    vnc_lock_output(vs);
+-    vnc_write_u8(vs, VNC_MSG_SERVER_FRAMEBUFFER_UPDATE);
+-    vnc_write_u8(vs, 0);
+-    vnc_write_u16(vs, 1); /* number of rects */
+-    vnc_framebuffer_update(vs, dst_x, dst_y, w, h, VNC_ENCODING_COPYRECT);
+-    vnc_write_u16(vs, src_x);
+-    vnc_write_u16(vs, src_y);
+-    vnc_unlock_output(vs);
+-    vnc_flush(vs);
+-}
+-
+-static void vnc_dpy_copy(DisplayChangeListener *dcl,
+-                         int src_x, int src_y,
+-                         int dst_x, int dst_y, int w, int h)
+-{
+-    VncDisplay *vd = container_of(dcl, VncDisplay, dcl);
+-    VncState *vs, *vn;
+-    uint8_t *src_row;
+-    uint8_t *dst_row;
+-    int i, x, y, pitch, inc, w_lim, s;
+-    int cmp_bytes;
+-
+-    if (!vd->server) {
+-        /* no client connected */
+-        return;
+-    }
+-
+-    vnc_refresh_server_surface(vd);
+-    QTAILQ_FOREACH_SAFE(vs, &vd->clients, next, vn) {
+-        if (vnc_has_feature(vs, VNC_FEATURE_COPYRECT)) {
+-            vs->force_update = 1;
+-            vnc_update_client(vs, 1, true);
+-            /* vs might be free()ed here */
+-        }
+-    }
+-
+-    if (!vd->server) {
+-        /* no client connected */
+-        return;
+-    }
+-    /* do bitblit op on the local surface too */
+-    pitch = vnc_server_fb_stride(vd);
+-    src_row = vnc_server_fb_ptr(vd, src_x, src_y);
+-    dst_row = vnc_server_fb_ptr(vd, dst_x, dst_y);
+-    y = dst_y;
+-    inc = 1;
+-    if (dst_y > src_y) {
+-        /* copy backwards */
+-        src_row += pitch * (h-1);
+-        dst_row += pitch * (h-1);
+-        pitch = -pitch;
+-        y = dst_y + h - 1;
+-        inc = -1;
+-    }
+-    w_lim = w - (VNC_DIRTY_PIXELS_PER_BIT - (dst_x % VNC_DIRTY_PIXELS_PER_BIT));
+-    if (w_lim < 0) {
+-        w_lim = w;
+-    } else {
+-        w_lim = w - (w_lim % VNC_DIRTY_PIXELS_PER_BIT);
+-    }
+-    for (i = 0; i < h; i++) {
+-        for (x = 0; x <= w_lim;
+-                x += s, src_row += cmp_bytes, dst_row += cmp_bytes) {
+-            if (x == w_lim) {
+-                if ((s = w - w_lim) == 0)
+-                    break;
+-            } else if (!x) {
+-                s = (VNC_DIRTY_PIXELS_PER_BIT -
+-                    (dst_x % VNC_DIRTY_PIXELS_PER_BIT));
+-                s = MIN(s, w_lim);
+-            } else {
+-                s = VNC_DIRTY_PIXELS_PER_BIT;
+-            }
+-            cmp_bytes = s * VNC_SERVER_FB_BYTES;
+-            if (memcmp(src_row, dst_row, cmp_bytes) == 0)
+-                continue;
+-            memmove(dst_row, src_row, cmp_bytes);
+-            QTAILQ_FOREACH(vs, &vd->clients, next) {
+-                if (!vnc_has_feature(vs, VNC_FEATURE_COPYRECT)) {
+-                    set_bit(((x + dst_x) / VNC_DIRTY_PIXELS_PER_BIT),
+-                            vs->dirty[y]);
+-                }
+-            }
+-        }
+-        src_row += pitch - w * VNC_SERVER_FB_BYTES;
+-        dst_row += pitch - w * VNC_SERVER_FB_BYTES;
+-        y += inc;
+-    }
+-
+-    QTAILQ_FOREACH(vs, &vd->clients, next) {
+-        if (vnc_has_feature(vs, VNC_FEATURE_COPYRECT)) {
+-            vnc_copy(vs, src_x, src_y, dst_x, dst_y, w, h);
+-        }
+-    }
+-}
+-
+ static void vnc_mouse_set(DisplayChangeListener *dcl,
+                           int x, int y, int visible)
+ {
+@@ -1258,12 +1159,13 @@ ssize_t vnc_client_io_error(VncState *vs, ssize_t ret, Error **errp)
+     if (ret <= 0) {
+         if (ret == 0) {
+             VNC_DEBUG("Closing down client sock: EOF\n");
++            vnc_disconnect_start(vs);
+         } else if (ret != QIO_CHANNEL_ERR_BLOCK) {
+             VNC_DEBUG("Closing down client sock: ret %d (%s)\n",
+                       ret, errp ? error_get_pretty(*errp) : "Unknown");
++            vnc_disconnect_start(vs);
+         }
+ 
+-        vnc_disconnect_start(vs);
+         if (errp) {
+             error_free(*errp);
+             *errp = NULL;
+@@ -2459,10 +2361,14 @@ static int protocol_client_init(VncState *vs, uint8_t *data, size_t len)
+ 
+     pixel_format_message(vs);
+ 
+-    if (qemu_name)
++    if (qemu_name) {
+         size = snprintf(buf, sizeof(buf), "QEMU (%s)", qemu_name);
+-    else
++        if (size > sizeof(buf)) {
++            size = sizeof(buf);
++        }
++    } else {
+         size = snprintf(buf, sizeof(buf), "QEMU");
++    }
+ 
+     vnc_write_u32(vs, size);
+     vnc_write(vs, buf, size);
+@@ -3118,7 +3024,6 @@ static gboolean vnc_listen_io(QIOChannel *ioc,
+ static const DisplayChangeListenerOps dcl_ops = {
+     .dpy_name             = "vnc",
+     .dpy_refresh          = vnc_refresh,
+-    .dpy_gfx_copy         = vnc_dpy_copy,
+     .dpy_gfx_update       = vnc_dpy_update,
+     .dpy_gfx_switch       = vnc_dpy_switch,
+     .dpy_gfx_check_format = qemu_pixman_check_format,
+diff --git a/util/qemu-thread-posix.c b/util/qemu-thread-posix.c
+index d20cdde..d31793d 100644
+--- a/util/qemu-thread-posix.c
++++ b/util/qemu-thread-posix.c
+@@ -481,12 +481,6 @@ void qemu_thread_create(QemuThread *thread, const char *name,
+     if (err) {
+         error_exit(err, __func__);
+     }
+-    if (mode == QEMU_THREAD_DETACHED) {
+-        err = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+-        if (err) {
+-            error_exit(err, __func__);
+-        }
+-    }
+ 
+     /* Leave signal handling to the iothread.  */
+     sigfillset(&set);
+@@ -499,6 +493,12 @@ void qemu_thread_create(QemuThread *thread, const char *name,
+         qemu_thread_set_name(thread, name);
+     }
+ 
++    if (mode == QEMU_THREAD_DETACHED) {
++        err = pthread_detach(thread->thread);
++        if (err) {
++            error_exit(err, __func__);
++        }
++    }
+     pthread_sigmask(SIG_SETMASK, &oldset, NULL);
+ 
+     pthread_attr_destroy(&attr);

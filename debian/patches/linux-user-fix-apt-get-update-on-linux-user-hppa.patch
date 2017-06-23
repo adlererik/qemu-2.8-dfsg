@@ -1,0 +1,45 @@
+From: Laurent Vivier <laurent@vivier.eu>
+Date: Thu, 26 Jan 2017 09:04:48 +0100
+Subject: linux-user: fix "apt-get update" on linux-user hppa
+Commit-Id: 40493c5f2b0f124c9b2581e539bba14522e51269
+Bug-Debian: http://bugs.debian.org/846084
+
+apt-get was hanging on linux-user hppa.
+
+strace has shown the netlink data stream was not correctly byte swapped.
+
+It appears the fd translator function is unregistered just after it
+has been registered, so the translator function is not called.
+
+This patch removes the fd_trans_unregister() after the do_socket()
+in the TARGET_NR_socket case.
+
+This fd_trans_unregister() was added by commit
+    e36800c linux-user: add signalfd/signalfd4 syscalls
+when do_socket() was not registering any fd translator.
+And as now it is, we must remove this fd_trans_unregister() to keep them.
+
+Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Message-Id: <20170126080449.28255-3-laurent@vivier.eu>
+Signed-off-by: Richard Henderson <rth@twiddle.net>
+---
+ linux-user/syscall.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/linux-user/syscall.c b/linux-user/syscall.c
+index 11a311f..9be8e95 100644
+--- a/linux-user/syscall.c
++++ b/linux-user/syscall.c
+@@ -9343,7 +9343,6 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
+ #ifdef TARGET_NR_socket
+     case TARGET_NR_socket:
+         ret = do_socket(arg1, arg2, arg3);
+-        fd_trans_unregister(ret);
+         break;
+ #endif
+ #ifdef TARGET_NR_socketpair
+-- 
+2.1.4
+

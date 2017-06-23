@@ -1,0 +1,35 @@
+From: Ed Swierk <eswierk@skyportsystems.com>
+Date: Tue, 31 Jan 2017 05:45:29 -0800
+Subject: char: drop data written to a disconnected pty
+Commit-Id: 1c64fdbc8177058802df205f5d7cd65edafa59a8
+
+When a serial port writes data to a pty that's disconnected, drop the
+data and return the length dropped. This avoids triggering pointless
+retries in callers like the 16550A serial_xmit(), and causes
+qemu_chr_fe_write() to write all data to the log file, rather than
+logging only while a pty client like virsh console happens to be
+connected.
+
+Signed-off-by: Ed Swierk <eswierk@skyportsystems.com>
+Message-Id: <1485870329-79428-1-git-send-email-eswierk@skyportsystems.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ qemu-char.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qemu-char.c b/qemu-char.c
+index 2c9940c..4afa9b0 100644
+--- a/qemu-char.c
++++ b/qemu-char.c
+@@ -1523,7 +1523,7 @@ static int pty_chr_write(CharDriverState *chr, const uint8_t *buf, int len)
+         /* guest sends data, check for (re-)connect */
+         pty_chr_update_read_handler_locked(chr);
+         if (!s->connected) {
+-            return 0;
++            return len;
+         }
+     }
+     return io_channel_send(s->ioc, buf, len);
+-- 
+2.1.4
+
