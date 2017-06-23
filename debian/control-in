@@ -20,8 +20,8 @@ Build-Depends: debhelper (>= 9),
  acpica-tools,
 # --enable-linux-aio	linux-*
  libaio-dev [linux-any],
-# --audio-drv-list=pa,alsa,sdl,oss	linux-*
-# --audio-drv-list=pa,oss,sdl		kfreebsd-*
+# --audio-drv-list=pa,alsa,oss	linux-*
+# --audio-drv-list=pa,oss		kfreebsd-*
  libasound2-dev [linux-any],
 # for virtfs
 # --enable-attr
@@ -41,12 +41,9 @@ Build-Depends: debhelper (>= 9),
  libfdt-dev,
 # --enable-gnutls
  gnutls-dev,
-# gtk ui is almost the same as sdl but adds bloat
-# --disable-gtk
-## --with-gtkabi=2.0
-# libgtk2.0-dev, libvte-dev (>> 0.18.0~),
-# vte is used together with gtk
-# --disable-vte
+# gtk display (see also sdl display)
+# --enable-gtk --with-gtkabi=3.0 --enable-vte
+ libgtk-3-dev, libvte-2.91-dev,
 # --enable-libiscsi
  libiscsi-dev (>> 1.9.0~),
 # --enable-curses
@@ -68,9 +65,10 @@ Build-Depends: debhelper (>= 9),
 :debian: glusterfs-common,
 # --enable-vnc-sasl
  libsasl2-dev,
+# sdl display (see also gtk display)
 # note: libsdl2-dev is in universe on ubuntu
-# --enable-sdl --with-sdlabi=1.2
- libsdl1.2-dev (>> 1.2.1),
+# --disable-sdl --with-sdlabi=1.2
+# libsdl1.2-dev (>> 1.2.1),
 # --enable-seccomp	linux-amd64|linux-i386
  libseccomp-dev (>> 2.1.0) [linux-amd64 linux-i386],
 # --enable-spice	linux-amd64|linux-i386
@@ -86,8 +84,6 @@ Build-Depends: debhelper (>= 9),
 # vde is debian-only since ubuntu/vde2 is in universe
 :debian:# --enable-vde
 :debian: libvdeplug-dev,
-# needed for sdl
- libx11-dev,
 # --enable-xen	linux-amd64|linux-i386
  libxen-dev [linux-amd64 linux-i386],
 # XXX need to check minimum linux-headers requiriment
