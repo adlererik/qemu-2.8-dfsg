@@ -1,13 +1,13 @@
-qemu (1:2.8+dfsg-6.1) UNRELEASED; urgency=medium
+qemu (1:2.8+dfsg-8) UNRELEASED; urgency=medium
 
-* Enabled VirGL/OpenGL
+  * Working VirGL/OpenGL
   * Added display-virtio-gpu-3d-check-virgl-capabilities-max_size-CVE-2016-1002$
-  * Fixed switch from sdl1 to gtk3 (#839695)
-  * Fixed enable virtio gpu (virglrenderer) and opengl support (#813658)
+  * switch from sdl1 to gtk3 (#839695)
+  * enable virtio gpu (virglrenderer) and opengl support (#813658)
   * strip out -ldrm out of OPENGL_LIBS, since libdrm is actually not needed
-  * fix gtk/vte options in d/control[-in]
+  * fix gtk/vte options in d/control[-in]  
 
- -- Erik Adler <erik.adler@gmail.com>  Sun, 25 Jun 2017 02:02:28 +0200
+ -- Erik Adler <erik.adler@gmail.com>  Sun, 25 Jun 2017 02:57:10 +0200
 
 qemu (1:2.8+dfsg-6) unstable; urgency=high
 
