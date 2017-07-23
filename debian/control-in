@@ -1,7 +1,7 @@
 Source: qemu
 Section: otherosfs
 Priority: optional
-:debian:Maintainer: Debian QEMU Team <pkg-qemu-devel@lists.alioth.debian.org>
+:debian:Maintainer: Erik Adler <erik.adler@mensa.se>
 :ubuntu:Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 :ubuntu:XSBC-Original-Maintainer: Debian QEMU Team <pkg-qemu-devel@lists.alioth.debian.org>
 Uploaders: Aurelien Jarno <aurel32@debian.org>,

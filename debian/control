@@ -2,7 +2,7 @@
 Source: qemu
 Section: otherosfs
 Priority: optional
-Maintainer: Debian QEMU Team <pkg-qemu-devel@lists.alioth.debian.org>
+Maintainer: Erik Adler <erik.adler@mensa.se>
 Uploaders: Aurelien Jarno <aurel32@debian.org>,
 	Riku Voipio <riku.voipio@iki.fi>,
 	Vagrant Cascadian <vagrant@debian.org>,
@@ -19,8 +19,8 @@ Build-Depends: debhelper (>= 9),
  acpica-tools,
 # --enable-linux-aio	linux-*
  libaio-dev [linux-any],
-# --audio-drv-list=pa,alsa,sdl,oss	linux-*
-# --audio-drv-list=pa,oss,sdl		kfreebsd-*
+# --audio-drv-list=pa,alsa,oss	linux-*
+# --audio-drv-list=pa,oss		kfreebsd-*
  libasound2-dev [linux-any],
 # for virtfs
 # --enable-attr
@@ -40,12 +40,19 @@ Build-Depends: debhelper (>= 9),
  libfdt-dev,
 # --enable-gnutls
  gnutls-dev,
-# gtk ui is almost the same as sdl but adds bloat
-# --disable-gtk
-## --with-gtkabi=2.0
-# libgtk2.0-dev, libvte-dev (>> 0.18.0~),
-# vte is used together with gtk
-# --disable-vte
+# gtk display (see also sdl display)
+# --enable-gtk
+# --with-gtkabi=3.0
+ libgtk-3-dev,
+# --enable-vte
+ libvte-2.91-dev,
+# opengl for sdl2 and gtk3
+# --enable-opengl
+# libegl1-mesa-dev is here b/c libepoxy-dev includes header from it
+ libdrm-dev, libgbm-dev, libepoxy-dev, libx11-dev, libegl1-mesa-dev,
+# virglrenderer: virtio gpu support for guest
+# --enable-virglrenderer
+ libvirglrenderer-dev,
 # --enable-libiscsi
  libiscsi-dev (>> 1.9.0~),
 # --enable-curses
@@ -67,9 +74,10 @@ Build-Depends: debhelper (>= 9),
  glusterfs-common,
 # --enable-vnc-sasl
  libsasl2-dev,
+# sdl display (see also gtk display)
 # note: libsdl2-dev is in universe on ubuntu
-# --enable-sdl --with-sdlabi=1.2
- libsdl1.2-dev (>> 1.2.1),
+# --disable-sdl --with-sdlabi=1.2
+# libsdl1.2-dev (>> 1.2.1),
 # --enable-seccomp	linux-amd64|linux-i386
  libseccomp-dev (>> 2.1.0) [linux-amd64 linux-i386],
 # --enable-spice	linux-amd64|linux-i386
@@ -85,8 +93,6 @@ Build-Depends: debhelper (>= 9),
 # vde is debian-only since ubuntu/vde2 is in universe
 # --enable-vde
  libvdeplug-dev,
-# needed for sdl
- libx11-dev,
 # --enable-xen	linux-amd64|linux-i386
  libxen-dev [linux-amd64 linux-i386],
 # XXX need to check minimum linux-headers requiriment
